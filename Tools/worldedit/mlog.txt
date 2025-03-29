@@ -1,0 +1,5 @@
+WFog Enabled Device.
+device created.
+Video memory 2045.000000 
+Reset Device 
+Video memory 2045.000000 
