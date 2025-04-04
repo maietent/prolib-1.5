@@ -2,7 +2,9 @@
 I cooked this up in like a month, the state the Jetman source got released in isnt the greatest, so i fixed almost all of the issues with it and added a few things, This should be a pretty stable base to make a server in my opinion.
 
 Guide for setting it up: https://youtu.be/TxHCIKvAmRQ
+
 GunZ Development Center: https://discord.gg/ytWyx3MSW4
+
 The RageZone Post: https://forum.ragezone.com/threads/jetman-source-if-he-wasnt-drunk.1230537/
 
 Compile in Release x64.
