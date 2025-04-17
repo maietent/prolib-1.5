@@ -2,7 +2,7 @@
 #define _MQUEST_FORMULA_H
 
 
-#include "winsock2.h"
+//#include "winsock2.h"
 
 /// 퀘스트에서 사용하는 공식 모음 클래스. 
 /// - 모두 static으로 되어있다.

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "winsock2.h"
+//#include "winsock2.h"
 #include "MObject.h"
 #include "MMap.h"
 #include "MFormulaTable.h"

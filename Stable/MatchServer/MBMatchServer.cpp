@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "MBMatchServer.h"
-#include "MatchServerDoc.h"
-#include "OutputView.h"
+//#include "MatchServerDoc.h"
+//#include "OutputView.h"
 #include <atltime.h>
-#include "MatchServer.h"
+//#include "MatchServer.h"
 #include "MMap.h"
 #include "MErrorTable.h"
-#include "CommandLogView.h"
+//#include "CommandLogView.h"
 #include "MDebug.h"
 #include "MMatchRule.h"
-#include "MBMatchAuth.h"
+//#include "MBMatchAuth.h"
 #include "MDebug.h"
 #include "MMatchStatus.h"
 #include "MMatchSchedule.h"
@@ -50,7 +50,7 @@ bool MBMatchServer::OnCreate(void)
 {
 	SetupRCPLog(MBRCPLog);
 
-	CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
+	//CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
 
 	// UDP초기화보다 먼저 실행이 되어야 함.
 	// 모니터링 관련 패킷이 모니터링 초기화 보다 먼저 도착하면 NULL포인터 참조가 일어남.
@@ -59,7 +59,7 @@ bool MBMatchServer::OnCreate(void)
 	if( !MMatchServer::OnCreate() )
 		return false;
 
-	if( !m_ConfigReloader.Create() )
+    if( !m_ConfigReloader.Create() )
 		return false;
 
 	if( !InitSecrity() )
@@ -140,40 +140,40 @@ void MBMatchServer::OnDestroy(void)
 
 void MBMatchServer::OnPrepareCommand(MCommand* pCommand)
 {
-	// 커맨드 로그 남기기
-	if(m_pCmdLogView==NULL) return;
-
-	CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
-	if (pApp->CheckOutputLog() == false) return;
-
-
-	CCommandLogView::CCommandType t;
-	if(pCommand->m_pCommandDesc->IsFlag(MCDT_LOCAL)==true) t = CCommandLogView::CCT_LOCAL;
-	else if(pCommand->m_Sender==m_This) t = CCommandLogView::CCT_SEND;
-	else if(pCommand->m_Receiver==m_This) t = CCommandLogView::CCT_RECEIVE;
-	else _ASSERT(FALSE);
-
-	m_pCmdLogView->AddCommand(GetGlobalClockCount(), t, pCommand);
-/*
-#ifdef _DEBUG
-#ifndef _DEBUG_PUBLISH
-	// 커맨드 로그 남기기
-	if(m_pCmdLogView==NULL) return;
-
-	CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
-	if (pApp->CheckOutputLog() == false) return;
-
-
-	CCommandLogView::CCommandType t;
-	if(pCommand->m_pCommandDesc->IsFlag(MCDT_LOCAL)==true) t = CCommandLogView::CCT_LOCAL;
-	else if(pCommand->m_Sender==m_This) t = CCommandLogView::CCT_SEND;
-	else if(pCommand->m_Receiver==m_This) t = CCommandLogView::CCT_RECEIVE;
-	else _ASSERT(FALSE);
-	
-	m_pCmdLogView->AddCommand(GetGlobalClockCount(), t, pCommand);
-#endif
-#endif
-*/
+//	// 커맨드 로그 남기기
+//	if(m_pCmdLogView==NULL) return;
+//
+//	CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
+//	if (pApp->CheckOutputLog() == false) return;
+//
+//
+//	CCommandLogView::CCommandType t;
+//	if(pCommand->m_pCommandDesc->IsFlag(MCDT_LOCAL)==true) t = CCommandLogView::CCT_LOCAL;
+//	else if(pCommand->m_Sender==m_This) t = CCommandLogView::CCT_SEND;
+//	else if(pCommand->m_Receiver==m_This) t = CCommandLogView::CCT_RECEIVE;
+//	else _ASSERT(FALSE);
+//
+//	m_pCmdLogView->AddCommand(GetGlobalClockCount(), t, pCommand);
+///*
+//#ifdef _DEBUG
+//#ifndef _DEBUG_PUBLISH
+//	// 커맨드 로그 남기기
+//	if(m_pCmdLogView==NULL) return;
+//
+//	CMatchServerApp* pApp = (CMatchServerApp*)AfxGetApp();
+//	if (pApp->CheckOutputLog() == false) return;
+//
+//
+//	CCommandLogView::CCommandType t;
+//	if(pCommand->m_pCommandDesc->IsFlag(MCDT_LOCAL)==true) t = CCommandLogView::CCT_LOCAL;
+//	else if(pCommand->m_Sender==m_This) t = CCommandLogView::CCT_SEND;
+//	else if(pCommand->m_Receiver==m_This) t = CCommandLogView::CCT_RECEIVE;
+//	else _ASSERT(FALSE);
+//	
+//	m_pCmdLogView->AddCommand(GetGlobalClockCount(), t, pCommand);
+//#endif
+//#endif
+//*/
 }
 
 
@@ -196,7 +196,7 @@ void MBMatchServer::Shutdown()
 
 void MBMatchServer::Log(unsigned int nLogLevel, const char* szLog)
 {
-	MMatchServer::Log(nLogLevel, szLog);	
+	/*MMatchServer::Log(nLogLevel, szLog);	
 
 	if ((nLogLevel & LOG_PROG) == LOG_PROG)
 	{
@@ -207,7 +207,7 @@ void MBMatchServer::Log(unsigned int nLogLevel, const char* szLog)
 
 		m_pView->AddString(szTime, TIME_COLOR, false);
 		m_pView->AddString(szLog, RGB(0,0,0));
-	}
+	}*/
 }
 
 bool MBMatchServer::InitSubTaskSchedule()

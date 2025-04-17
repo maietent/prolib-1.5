@@ -31,7 +31,7 @@ C0001 : Modified by Hyo Sun Hwang (hyosun@future.co.kr) 2000/00/00
 #include <memory.h>
 #include <windows.h>
 
-/*************** Assertions ***********************************************/
+/*************** ASSERTions ***********************************************/
 ////////	Define the Endianness	////////
 
 

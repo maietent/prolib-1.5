@@ -492,7 +492,7 @@ void MServer::RCPCallback(void* pCallbackContext, RCP_IO_OPERATION nIO, DWORD nK
 	}
 	else if (nIO == RCP_IO_DISCONNECT) {
 		//pServer->DebugLog("MServer::RCPCallback(RCP_IO_DISCONNECT) \n");
-
+		//mlog("RCP_IO_DISCONNECT reached\n");
 		MCommObject* pCommObj = (MCommObject*)pServer->m_RealCPNet.GetUserContext(nKey);
 		if (pCommObj) {
 			pServer->OnDisconnect(pCommObj->GetUID());

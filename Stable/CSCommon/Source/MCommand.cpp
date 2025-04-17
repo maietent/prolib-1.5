@@ -118,7 +118,7 @@ bool MCommand::AddParameter(MCommandParameter* pParam)
 	int nCount = (int)m_Params.size();
 	int nParamDescCount = m_pCommandDesc->GetParameterDescCount();
 
-	_ASSERT(nCount<nParamDescCount);				// Debug Mode 에서는 Assert로 엄격하게 체크한다.
+	_ASSERT(nCount<nParamDescCount);				// Debug Mode 에서는 ASSERT로 엄격하게 체크한다.
 	if(nCount>=nParamDescCount) return false;
 
 	MCommandParameterDesc* pParamDesc = m_pCommandDesc->GetParameterDesc(nCount);

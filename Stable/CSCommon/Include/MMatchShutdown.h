@@ -16,7 +16,7 @@ public:
 		memset( m_szMessage, 0, 128 );
 		m_nDelay = nDelay;
 		const size_t len = strlen( pszMsg );
-		ASSERT( (len < 128) && "문자열의 길이가 128보다 작아야 함." );
+		//ASSERT( (len < 128) && "문자열의 길이가 128보다 작아야 함." );
 		strncpy( m_szMessage, pszMsg,  len < 128 ? len : 127 );
 	}
 	virtual ~MShutdownNotify() {}

@@ -2,7 +2,7 @@
 #define MMATCHSERVER_H
 
 #include "MMatchDBMgr.h"
-#include "winsock2.h"
+//#include "winsock2.h"
 #include "MServer.h"
 #include "MMatchObject.h"
 #include "MAgentObject.h"

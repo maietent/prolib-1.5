@@ -211,6 +211,7 @@
     <ClInclude Include="Include\MPlane.h" />
     <ClInclude Include="Include\MQuat.h" />
     <ClInclude Include="Include\MVector3.h" />
+    <ClInclude Include="Include\MWindowsFwd.h" />
     <ClInclude Include="Include\MXml.h" />
     <ClInclude Include="Include\MZip.h" />
     <ClInclude Include="Include\rapidxml.hpp" />

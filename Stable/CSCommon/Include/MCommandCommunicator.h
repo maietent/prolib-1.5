@@ -11,6 +11,7 @@
 #ifdef _CMD_PROFILE
 #include "MCommandProfiler.h"
 #endif
+#include <WS2tcpip.h>
 
 
 class MCommandCommunicator;
@@ -53,7 +54,7 @@ public:
 	DWORD GetIP()			{ return m_dwIP; }
 	int GetPort()			{ return m_nPort; }
 	void SetAddress(const char* pszIP, int nPort) {
-		strcpy_s(m_szIP, sizeof(m_szIP),pszIP);
+		strcpy_s(m_szIP, sizeof(m_szIP), pszIP);
 		m_dwIP = inet_addr(m_szIP);
 		m_nPort = nPort;
 	}

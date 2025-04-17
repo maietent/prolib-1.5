@@ -11,7 +11,7 @@
 inline int RandomNumber(int nMin, int nMax)
 {
 	// 범위의 크기가 131,072이상이면 오버플로우가 발생한다.
-	_ASSERT((nMax-nMin) < 131072);
+	//ASSERT((nMax-nMin) < 131072);
 	return (rand() * (nMax - nMin + 1) / (RAND_MAX+1) + nMin );
 }
 

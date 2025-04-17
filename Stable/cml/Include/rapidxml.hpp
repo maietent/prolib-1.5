@@ -10,7 +10,7 @@
 // If standard library is disabled, user must provide implementations of required functions and typedefs
 #if !defined(RAPIDXML_NO_STDLIB)
     #include <cstdlib>      // For std::size_t
-    #include <cassert>      // For assert
+    #include <cASSERT>      // For //ASSERT
     #include <new>          // For placement new
 #endif
 
@@ -26,7 +26,7 @@
     
 #if defined(RAPIDXML_NO_EXCEPTIONS)
 
-#define RAPIDXML_PARSE_ERROR(what, where) { parse_error_handler(what, where); assert(0); }
+#define RAPIDXML_PARSE_ERROR(what, where) { parse_error_handler(what, where); //ASSERT(0); }
 
 namespace rapidxml
 {
@@ -476,7 +476,7 @@ namespace rapidxml
         //! \return Pointer to allocated char array. This pointer will never be NULL.
         Ch *allocate_string(const Ch *source = 0, std::size_t size = 0)
         {
-            assert(source || size);     // Either source or size (or both) must be specified
+            //ASSERT(source || size);     // Either source or size (or both) must be specified
             if (size == 0)
                 size = internal::measure(source) + 1;
             Ch *result = static_cast<Ch *>(allocate_aligned(size * sizeof(Ch)));
@@ -552,7 +552,7 @@ namespace rapidxml
         //! \param ff Free function, or 0 to restore default function
         void set_allocator(alloc_func_xml *af, free_func *ff)
         {
-            assert(m_begin == m_static_memory && m_ptr == align(m_begin));    // Verify that no memory is allocated yet
+            //ASSERT(m_begin == m_static_memory && m_ptr == align(m_begin));    // Verify that no memory is allocated yet
             m_alloc_func_xml = af;
             m_free_func = ff;
         }
@@ -584,7 +584,7 @@ namespace rapidxml
             if (m_alloc_func_xml)   // Allocate memory using either user-specified allocation function or global operator new[]
             {
                 memory = m_alloc_func_xml(size);
-                assert(memory); // Allocator is not allowed to return 0, on failure it must either throw, stop the program or use longjmp
+                //ASSERT(memory); // Allocator is not allowed to return 0, on failure it must either throw, stop the program or use longjmp
             }
             else
             {
@@ -958,7 +958,7 @@ namespace rapidxml
         //! \return Pointer to found child, or 0 if not found.
         xml_node<Ch> *last_node(const Ch *name = 0, std::size_t name_size = 0, bool case_sensitive = true) const
         {
-            assert(m_first_node);  // Cannot query for last child if node has no children
+            //ASSERT(m_first_node);  // Cannot query for last child if node has no children
             if (name)
             {
                 if (name_size == 0)
@@ -981,7 +981,7 @@ namespace rapidxml
         //! \return Pointer to found sibling, or 0 if not found.
         xml_node<Ch> *previous_sibling(const Ch *name = 0, std::size_t name_size = 0, bool case_sensitive = true) const
         {
-            assert(this->m_parent);     // Cannot query for siblings if node has no parent
+            //ASSERT(this->m_parent);     // Cannot query for siblings if node has no parent
             if (name)
             {
                 if (name_size == 0)
@@ -1004,7 +1004,7 @@ namespace rapidxml
         //! \return Pointer to found sibling, or 0 if not found.
         xml_node<Ch> *next_sibling(const Ch *name = 0, std::size_t name_size = 0, bool case_sensitive = true) const
         {
-            assert(this->m_parent);     // Cannot query for siblings if node has no parent
+            ////ASSERT(this->m_parent);     // Cannot query for siblings if node has no parent
             if (name)
             {
                 if (name_size == 0)
@@ -1076,7 +1076,7 @@ namespace rapidxml
         //! \param child Node to prepend.
         void prepend_node(xml_node<Ch> *child)
         {
-            assert(child && !child->parent() && child->type() != node_document);
+            //ASSERT(child && !child->parent() && child->type() != node_document);
             if (first_node())
             {
                 child->m_next_sibling = m_first_node;
@@ -1097,7 +1097,7 @@ namespace rapidxml
         //! \param child Node to append.
         void append_node(xml_node<Ch> *child)
         {
-            assert(child && !child->parent() && child->type() != node_document);
+            ////ASSERT(child && !child->parent() && child->type() != node_document);
             if (first_node())
             {
                 child->m_prev_sibling = m_last_node;
@@ -1119,8 +1119,8 @@ namespace rapidxml
         //! \param child Node to insert.
         void insert_node(xml_node<Ch> *where, xml_node<Ch> *child)
         {
-            assert(!where || where->parent() == this);
-            assert(child && !child->parent() && child->type() != node_document);
+            //ASSERT(!where || where->parent() == this);
+            //ASSERT(child && !child->parent() && child->type() != node_document);
             if (where == m_first_node)
                 prepend_node(child);
             else if (where == 0)
@@ -1140,7 +1140,7 @@ namespace rapidxml
         //! Use first_node() to test if node has children.
         void remove_first_node()
         {
-            assert(first_node());
+            //ASSERT(first_node());
             xml_node<Ch> *child = m_first_node;
             m_first_node = child->m_next_sibling;
             if (child->m_next_sibling)
@@ -1155,7 +1155,7 @@ namespace rapidxml
         //! Use first_node() to test if node has children.
         void remove_last_node()
         {
-            assert(first_node());
+            //ASSERT(first_node());
             xml_node<Ch> *child = m_last_node;
             if (child->m_prev_sibling)
             {
@@ -1171,8 +1171,8 @@ namespace rapidxml
         // \param where Pointer to child to be removed.
         void remove_node(xml_node<Ch> *where)
         {
-            assert(where && where->parent() == this);
-            assert(first_node());
+            //ASSERT(where && where->parent() == this);
+            //ASSERT(first_node());
             if (where == m_first_node)
                 remove_first_node();
             else if (where == m_last_node)
@@ -1197,7 +1197,7 @@ namespace rapidxml
         //! \param attribute Attribute to prepend.
         void prepend_attribute(xml_attribute<Ch> *attribute)
         {
-            assert(attribute && !attribute->parent());
+            //ASSERT(attribute && !attribute->parent());
             if (first_attribute())
             {
                 attribute->m_next_attribute = m_first_attribute;
@@ -1217,7 +1217,7 @@ namespace rapidxml
         //! \param attribute Attribute to append.
         void append_attribute(xml_attribute<Ch> *attribute)
         {
-            assert(attribute && !attribute->parent());
+            //ASSERT(attribute && !attribute->parent());
             if (first_attribute())
             {
                 attribute->m_prev_attribute = m_last_attribute;
@@ -1239,8 +1239,8 @@ namespace rapidxml
         //! \param attribute Attribute to insert.
         void insert_attribute(xml_attribute<Ch> *where, xml_attribute<Ch> *attribute)
         {
-            assert(!where || where->parent() == this);
-            assert(attribute && !attribute->parent());
+            //ASSERT(!where || where->parent() == this);
+            //ASSERT(attribute && !attribute->parent());
             if (where == m_first_attribute)
                 prepend_attribute(attribute);
             else if (where == 0)
@@ -1260,7 +1260,7 @@ namespace rapidxml
         //! Use first_attribute() to test if node has attributes.
         void remove_first_attribute()
         {
-            assert(first_attribute());
+            //ASSERT(first_attribute());
             xml_attribute<Ch> *attribute = m_first_attribute;
             if (attribute->m_next_attribute)
             {
@@ -1277,7 +1277,7 @@ namespace rapidxml
         //! Use first_attribute() to test if node has attributes.
         void remove_last_attribute()
         {
-            assert(first_attribute());
+            //ASSERT(first_attribute());
             xml_attribute<Ch> *attribute = m_last_attribute;
             if (attribute->m_prev_attribute)
             {
@@ -1293,7 +1293,7 @@ namespace rapidxml
         //! \param where Pointer to attribute to be removed.
         void remove_attribute(xml_attribute<Ch> *where)
         {
-            assert(first_attribute() && where->parent() == this);
+            //ASSERT(first_attribute() && where->parent() == this);
             if (where == m_first_attribute)
                 remove_first_attribute();
             else if (where == m_last_attribute)
@@ -1381,7 +1381,7 @@ namespace rapidxml
         template<int Flags>
         bool parse(Ch *text)
         {
-            assert(text);
+            ////ASSERT(text);
             
             // Remove current contents
             this->remove_all_nodes();

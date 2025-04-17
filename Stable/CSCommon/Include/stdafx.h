@@ -17,11 +17,11 @@
 #define POINTER_64 __ptr64
 
 // Include
-#include <afxdb.h>
-#include <afxtempl.h>
-#include <afxdtctl.h>
+//#include <afxdb.h>
+//#include <afxtempl.h>
+//#include <afxdtctl.h>
 
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <mswsock.h>
 #include <crtdbg.h>
 #include <windows.h>

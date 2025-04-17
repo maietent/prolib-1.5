@@ -1,7 +1,7 @@
 #ifndef _MMATCHSHOP_H
 #define _MMATCHSHOP_H
 
-#include "winsock2.h"
+//#include "winsock2.h"
 #include "MUID.h"
 #include <map>
 #include <vector>

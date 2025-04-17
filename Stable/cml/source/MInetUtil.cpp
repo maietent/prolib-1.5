@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Winsock2.h"
+//#include "Winsock2.h"
 #include "MInetUtil.h"
 #include <iostream>
 #include <string>

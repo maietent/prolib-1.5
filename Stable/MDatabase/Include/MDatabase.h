@@ -1,13 +1,15 @@
 #pragma once
 
-#include "afxdb.h"
+//#include "afxdb.h"
 
 #include <string>
+//#include <SafeString.h>
+//#include "../CString.h"
+#include <afxdb.h>
 
 using std::string;
 
-typedef void(LOGCALLBACK)( const string& strLog );
-
+typedef void(LOGCALLBACK)(const string& strLog);
 
 class MDatabase
 {
@@ -15,7 +17,7 @@ public:
 	MDatabase(void);
 	~MDatabase(void);
 
-	CDatabase* GetDatabase()	{ return &m_DB; }
+	CDatabase* GetDatabase() { return &m_DB; }
 
 	bool CheckOpen();
 	CString BuildDSNString(const CString strDSN, const CString strUserName, const CString strPassword);
@@ -24,14 +26,14 @@ public:
 	BOOL IsOpen() const;
 	void ExecuteSQL(LPCTSTR lpszSQL);
 	// thread unsafe
-	void SetLogCallback( LOGCALLBACK* fnLogCallback ) { m_fnLogCallback = fnLogCallback; }
+	void SetLogCallback(LOGCALLBACK* fnLogCallback) { m_fnLogCallback = fnLogCallback; }
 
-private :
-	void WriteLog( const string& strLog );
+private:
+	void WriteLog(const string& strLog);
 
-private :
+private:
 	CDatabase		m_DB;
 	CString			m_strDSNConnect;
 	DWORD			m_dwOptions;
-	LOGCALLBACK*	m_fnLogCallback;
+	LOGCALLBACK* m_fnLogCallback;
 };

@@ -32,7 +32,7 @@ public:
 	virtual int GetWidthWithoutAmpersand(const char* szText, int nSize=-1);
 //	virtual int GetLineCount(int nRectWidth, const char* szText);		// dc 의 TextMultiLine펑션과 맞춰야함
 //	virtual int GetPossibleCharacterCount(int nRectWidth,const char* szText);	// nRectWidth 안에 찍을수 있는 글자수
-	virtual bool Resize(float ratio, int nMinimumHeight) { _ASSERT(0); return true; } // 꼭 assert일 필요는 없음. 여기 들어오는지 개발중에 인지할 수 있도록 넣은것
+	virtual bool Resize(float ratio, int nMinimumHeight) { _ASSERT(0); return true; } // 꼭 ASSERT일 필요는 없음. 여기 들어오는지 개발중에 인지할 수 있도록 넣은것
 };
 
 

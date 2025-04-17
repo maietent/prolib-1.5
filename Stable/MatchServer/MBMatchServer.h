@@ -4,9 +4,9 @@
 #include "MMatchServer.h"
 #include "MBMatchServerConfigReloader.h"
 #include "MBMatchSecurity.h"
-#include "MBMatchMonitor.h"
+//#include "MBMatchMonitor.h"
 #include "MBMatchKillTracker.h"
-#include "MBMatchTest.h"
+//#include "MBMatchTest.h"
 
 class COutputView;
 class CCommandLogView;
@@ -28,7 +28,7 @@ public:
 
 	//MBMatchSecurity		m_Security;
 	MBMatchKillTracker	m_KillTracker;
-	MBMatchTest			m_Tester;
+	//MBMatchTest			m_Tester;
 
 
 protected:

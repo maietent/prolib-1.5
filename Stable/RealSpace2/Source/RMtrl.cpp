@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 #include "RMtrl.h"
-#include "assert.h"
+#include "ASSERT.h"
 #include <tchar.h>
 
 #include "RBaseTexture.h"

@@ -152,7 +152,7 @@ namespace rapidxml
 
                 // Unknown
             default:
-                assert(0);
+                ASSERT(0);
                 break;
             }
             
@@ -207,7 +207,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_data_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_data);
+            ASSERT(node->type() == node_data);
             if (!(flags & print_no_indenting))
                 out = fill_chars(out, indent, Ch('\t'));
             out = copy_and_expand_chars(node->value(), node->value() + node->value_size(), Ch(0), out);
@@ -218,7 +218,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_cdata_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_cdata);
+            ASSERT(node->type() == node_cdata);
             if (!(flags & print_no_indenting))
                 out = fill_chars(out, indent, Ch('\t'));
             *out = Ch('<'); ++out;
@@ -241,7 +241,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_element_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_element);
+            ASSERT(node->type() == node_element);
 
             // Print element name and attributes, if any
             if (!(flags & print_no_indenting))
@@ -320,7 +320,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_comment_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_comment);
+            ASSERT(node->type() == node_comment);
             if (!(flags & print_no_indenting))
                 out = fill_chars(out, indent, Ch('\t'));
             *out = Ch('<'), ++out;
@@ -338,7 +338,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_doctype_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_doctype);
+            ASSERT(node->type() == node_doctype);
             if (!(flags & print_no_indenting))
                 out = fill_chars(out, indent, Ch('\t'));
             *out = Ch('<'), ++out;
@@ -360,7 +360,7 @@ namespace rapidxml
         template<class OutIt, class Ch>
         inline OutIt print_pi_node(OutIt out, const xml_node<Ch> *node, int flags, int indent)
         {
-            assert(node->type() == node_pi);
+            ASSERT(node->type() == node_pi);
             if (!(flags & print_no_indenting))
                 out = fill_chars(out, indent, Ch('\t'));
             *out = Ch('<'), ++out;

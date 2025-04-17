@@ -101,6 +101,7 @@
     <ClInclude Include="Include\MZip.h">
       <Filter>security</Filter>
     </ClInclude>
+    <ClInclude Include="Include\MWindowsFwd.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\MMatrix.cpp">

@@ -3670,7 +3670,7 @@ void ZGame::OnPeerShot_Melee(const MUID& uidOwner, float fShotTime)
 			return;
 
 	MMatchItemDesc *pSkillDesc = pItem->GetDesc();
-	//jintriple3	여긴 assert가 있으니 음...잠시 보류..
+	//jintriple3	여긴 ASSERT가 있으니 음...잠시 보류..
 	bReturnValue = !pSkillDesc;
 	if ( !pSkillDesc)
 		PROTECT_DEBUG_REGISTER(bReturnValue)	

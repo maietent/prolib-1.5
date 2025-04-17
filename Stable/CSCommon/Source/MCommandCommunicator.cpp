@@ -152,7 +152,7 @@ void MCommandCommunicator::Run(void)
 	{
 		MCommand* pCommand = GetCommandSafe();
 
-		if(pCommand==NULL) break;
+		if(pCommand == nullptr) break;
 		
 		unsigned int CommandID = pCommand->GetID(); // 덤프시확인위해
 

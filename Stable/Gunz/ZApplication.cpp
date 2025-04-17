@@ -619,14 +619,14 @@ bool ZApplication::OnCreate(ZLoadingProgress *pLoadingProgress)
 	mlog("ZApplication::OnCreate : ZGetNPCGroupMgr()->ReadXml \n");
 */
 	// if (!MGetChattingFilter()->Create(GetFileSystem(), "system/abuse.xml"))
-	/*bool bSucceedLoadAbuse = MGetChattingFilter()->LoadFromFile(GetFileSystem(), strFileNameAbuse.c_str());
-	if (!bSucceedLoadAbuse || MGetChattingFilter()->GetNumAbuseWords() == 0)
-	{
-		// 해킹으로 abuse-list 파일자체를 없애거나 내용을 비웠을 경우 실행을 멈추게 하자
-		MLog("Error while Read Abuse Filter %s\n", strFileNameAbuse.c_str());
-		MessageBox(NULL, ZErrStr(MERR_FIND_INVALIDFILE), ZMsg( MSG_WARNING), MB_OK);	// TODO: 풀스크린에서 메시지 박스는 좀 곤란함;
-		return false;
-	}*/
+	//bool bSucceedLoadAbuse = MGetChattingFilter()->LoadFromFile(GetFileSystem(), strFileNameAbuse.c_str());
+	//if (!bSucceedLoadAbuse || MGetChattingFilter()->GetNumAbuseWords() == 0)
+	//{
+	//	// 해킹으로 abuse-list 파일자체를 없애거나 내용을 비웠을 경우 실행을 멈추게 하자
+	//	MLog("Error while Read Abuse Filter %s\n", strFileNameAbuse.c_str());
+	//	MessageBox(NULL, ZErrStr(MERR_FIND_INVALIDFILE), ZMsg( MSG_WARNING), MB_OK);	// TODO: 풀스크린에서 메시지 박스는 좀 곤란함;
+	//	return false;
+	//}
 	mlog( "Init abuse manager success.\n" );
 
 	

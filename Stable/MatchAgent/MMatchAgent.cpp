@@ -48,14 +48,15 @@ MMatchAgent::~MMatchAgent(void)
 
 bool MMatchAgent::Create(int nPort)
 {
-	if (nPort == 0)
-		nPort = GetTCPPort();
+	int nPortNonParam = nPort;
+	if (nPortNonParam == 0)
+		nPortNonParam = GetTCPPort();
 
-	if(MServer::Create(nPort)==false) return false;
+	if(MServer::Create(nPortNonParam)==false) return false;
 
 	if(OnCreate()==false){
 //		Destroy();
-		LOG(LOG_PROG, "Agent Server create FAILED (Port:%d)", nPort);
+		LOG(LOG_PROG, "Agent Server create FAILED (Port:%d)", nPortNonParam);
 		return false;
 	}
 
@@ -65,7 +66,7 @@ bool MMatchAgent::Create(int nPort)
 	m_SafeUDP.Create(false, GetUDPPort());
 	m_SafeUDP.SetCustomRecvCallback(UDPSocketRecvEvent);
 
-	LOG(LOG_PROG, "Match Agent Created (Port:%d)", nPort);
+	LOG(LOG_PROG, "Match Agent Created (Port:%d)", nPortNonParam);
 ///////////////////////////////////////
 
 ///////////////////////////////////////
@@ -112,6 +113,7 @@ OutputDebugString("MMatchAgent::ConnectToMatchServer BEGIN \n");
 	if(nErrCode!=MOK) {
 		LOG(LOG_PROG, "Failed to Connect to MatchServer (Err:%d)", nErrCode);
 		SetMatchServerTrying(false);
+		//mlog("connecttomatchserver setmatchserverconnected false\n");
 		SetMatchServerConnected(false);
 		Disconnect(pCommObj->GetUID());
 	}
@@ -188,6 +190,7 @@ bool MMatchAgent::OnCommand(MCommand* pCommand)
 				if (pCommand->GetParameter(&uid, 0, MPT_UID)==false) break;
 				if (uid == GetMatchServerUID()) {
 					SetMatchServerTrying(false);
+					//mlog("mc_net_clear setmatchserverconnected false\n");
 					SetMatchServerConnected(false);
 					SetLastLiveCheckSendTime(0);
 					SetLastLiveCheckRecvTime(0);
@@ -244,6 +247,7 @@ bool MMatchAgent::OnCommand(MCommand* pCommand)
 				if(nErrCode!=MOK) {
 					LOG(LOG_PROG, "Failed to Connect to MatchServer (Err:%d)", nErrCode);
 					SetMatchServerTrying(false);
+					//mlog("mc_Agent_connect setmatchserverconnected false\n");
 					SetMatchServerConnected(false);
 					Disconnect(pCommObj->GetUID());
 				}
@@ -403,7 +407,7 @@ void MMatchAgent::OnRun(void)
 			LOG(LOG_PROG, "Reconnect to MatchServer");
 
 			tmLastConnectTrying = nGlobalClock;
-			ConnectToMatchServer(NULL, 0);
+			ConnectToMatchServer("127.0.0.1", 6000);
 		}
 	} else {
 		if (GetLastLiveCheckRecvTime() == 0) {
@@ -701,7 +705,7 @@ int MMatchAgent::OnConnected(MUID* pTargetUID, MUID* pAllocUID, unsigned int nTi
 	pCmd->AddParameter(new MCmdParamInt(GetUDPPort()));
 	PostSafeQueue(pCmd);
 
-	//	Log(LOG_PROG, "MatchServer connected");	// Log is Not ThreadSafe
+	//mlog("MatchServer connected\n");
 
 //////////////////////////////////
 //MCommand* pNew = new MCommand(m_CommandManager.GetCommandDescByID(MC_NET_ECHO), GetMatchServerUID(), GetUID());

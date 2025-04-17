@@ -30,11 +30,13 @@
 
 #define _MONSTER_BIBLE 
 
+#define _AGENT_IP "127.0.0.1"
+
 //#define _GAMBLEITEM_TEST_LOG
 
 //#define _REPLAY_TEST_LOG
 
-#define _LOCATOR
+//#define _LOCATOR
 
 //Quickly debug and skip login process. Commented by default.
 //#define _FASTDEBUG

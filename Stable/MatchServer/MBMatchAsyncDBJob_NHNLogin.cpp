@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MBMatchAsyncDBJob_NHNLogin.h"
-#include "MBMatchNHNAuth.h"
+//#include "MBMatchNHNAuth.h"
 #include "MMatchObject.h"
 #include "MMatchDBMgr.h"
 

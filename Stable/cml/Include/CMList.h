@@ -7,8 +7,8 @@
 #define LIST_H
 
 #ifdef __BORLANDC__
-#include <assert.h>
-#define _ASSERT assert
+#include <ASSERT.h>
+#define _ASSERT ASSERT
 #else
 #include <crtdbg.h>			// _ASSERT
 #endif

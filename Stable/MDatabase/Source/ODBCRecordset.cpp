@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 
 // disable warning. by dubble
@@ -18,10 +18,10 @@ Copyright(c) 1998,1999,2000
 Stefan Tchekanov (stefant@iname.com)
 
 This code may be used in compiled form in any way you desire. This
-file may be redistributed unmodified by any means PROVIDING it is 
-not sold for profit without the authors written consent, and 
-providing that this notice and the authors name is included. If 
-the source code in this file is used in any commercial application 
+file may be redistributed unmodified by any means PROVIDING it is
+not sold for profit without the authors written consent, and
+providing that this notice and the authors name is included. If
+the source code in this file is used in any commercial application
 then a simple email to the author would be nice.
 
 This file is provided "as is" with no expressed or implied warranty.
@@ -32,29 +32,29 @@ The author accepts no liability if it causes any damage.
 
 /*************************************************************************
   REVISION ON 12.09.2000 15:27:22  By Stefan Tchekanov
- 
+
   Comments  : The field names in DoFieldExchange() are made to be quoted
-			  in square brackets - [FieldName]. This is the way the class 
+			  in square brackets - [FieldName]. This is the way the class
 			  wizard passes field names in DoFieldExchange() implementations.
- 
+
  *************************************************************************/
 
 
-/*************************************************************************
-  REVISION ON 09.06.2000 21:46:00  By Stefan Tchekanov
- 
-  Comments  : 1. Added CDBField::operator =( const char );
-			  2. Removed (!IsEOF()) && (!IsBOF()) from the ASSERT in
-				 CODBCRecordset::Field( int nField ) to be able to
-				 add records on empty recordsets
- 
- *************************************************************************/
+ /*************************************************************************
+   REVISION ON 09.06.2000 21:46:00  By Stefan Tchekanov
+
+   Comments  : 1. Added CDBField::operator =( const char );
+			   2. Removed (!IsEOF()) && (!IsBOF()) from the ASSERT in
+				  CODBCRecordset::Field( int nField ) to be able to
+				  add records on empty recordsets
+
+  *************************************************************************/
 
 
 
-////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
-//#include "stdafx.h"
+  //#include "stdafx.h"
 #include "ODBCRecordset.h"
 
 ////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ The author accepts no liability if it causes any damage.
 //
 ////////////////////////////////////////////////////////////////
 /*
-CODBCRecordset::CODBCRecordset( CDatabase* pDatabase  ) : 
+CODBCRecordset::CODBCRecordset( CDatabase* pDatabase  ) :
 				CRecordset( pDatabase )
 {
 	m_fields = NULL;
@@ -72,8 +72,8 @@ CODBCRecordset::CODBCRecordset( CDatabase* pDatabase  ) :
 */
 ////////////////////////////////////////////////////////////////
 
-CODBCRecordset::CODBCRecordset( MDatabase* pDatabase ) :
-	CRecordset( pDatabase->GetDatabase() )
+CODBCRecordset::CODBCRecordset(MDatabase* pDatabase) :
+	CRecordset(pDatabase->GetDatabase())
 {
 	m_fields = NULL;
 	m_AllocatedFields = 0;
@@ -88,7 +88,7 @@ CODBCRecordset::~CODBCRecordset() {
 
 //	Frees all the allocated memory
 void	CODBCRecordset::Clear() {
-	if( m_fields != NULL )
+	if (m_fields != NULL)
 		delete[]	m_fields;
 	m_fields = NULL;
 	m_AllocatedFields = 0;
@@ -100,19 +100,19 @@ void	CODBCRecordset::Clear() {
 //	e.g. SELECT * FROM tablename
 //	nOpentype is CRecordset open type, see CRecordset::Open()
 //	dwOptions is CRecordset options, see CRecordset::Open()
-BOOL	CODBCRecordset::Open( LPCTSTR lpszSQL, 
-							  UINT nOpenType, /*=AFX_DB_USE_DEFAULT_TYPE*/
-							  DWORD dwOptions /*= 0*/ )
+BOOL	CODBCRecordset::Open(LPCTSTR lpszSQL,
+	UINT nOpenType, /*=AFX_DB_USE_DEFAULT_TYPE*/
+	DWORD dwOptions /*= 0*/)
 {
 	//	Allocate the maximum possible field info storage
 	//	This is managed by CRecordset class
 	m_nFields = 255;
 	m_bNotLoadedFieldsMap = true;
-	BOOL	nRes = CRecordset::Open( 
-				nOpenType, 
-				lpszSQL, 
-				dwOptions );
-	
+	BOOL	nRes = CRecordset::Open(
+		nOpenType,
+		lpszSQL,
+		dwOptions);
+
 	return	nRes;
 }
 ////////////////////////////////////////////////////////////////
@@ -125,23 +125,23 @@ void	CODBCRecordset::LoadFieldNamesMap()
 	int	nFields = m_nFields = GetODBCFieldCount();
 
 	//	Smart storage reallocation for the fields buffer
-	if( m_AllocatedFields < nFields ) {
+	if (m_AllocatedFields < nFields) {
 		Clear();
-		m_fields = new CDBField[ m_nFields ];
+		m_fields = new CDBField[m_nFields];
 		m_AllocatedFields = m_nFields;
 	}
 
 	//	Load field names map
 	CODBCFieldInfo	fi;
 	CString			cName;
-	for( int i = 0; i < nFields; i++ ) {
+	for (int i = 0; i < nFields; i++) {
 		//	Clear the previously allocated storage object
 		m_fields[i].Clear();
 
 		// Determine the field type and initialize the data buffer
-		GetODBCFieldInfo( i, fi );
-		AllocDataBuffer( m_fields[i], fi );
-		
+		GetODBCFieldInfo(i, fi);
+		AllocDataBuffer(m_fields[i], fi);
+
 		//	Set the field name
 		fi.m_strName.MakeUpper();
 		cName = fi.m_strName;
@@ -149,52 +149,52 @@ void	CODBCRecordset::LoadFieldNamesMap()
 		//	Make different field names for the fields with
 		//	equal names.
 		int	fldCount = 1;
-		while( GetFieldID( cName ) != -1 ) {
+		while (GetFieldID(cName) != -1) {
 			fldCount++;
-			cName.Format( "%s%d", fi.m_strName, fldCount );
+			cName.Format("%s%d", fi.m_strName, fldCount);
 		}
 		m_fields[i].m_cName = cName;
-		m_mapNameIdx.SetAt( cName, (void*)i );
+		m_mapNameIdx.SetAt(cName, (void*)i);
 	}
 }
 ////////////////////////////////////////////////////////////////
 
 //	Overloaded so all the fields be loaded when needed
-void	CODBCRecordset::Move( long nRows, WORD wFetchType /*= SQL_FETCH_RELATIVE*/ )
+void	CODBCRecordset::Move(long nRows, WORD wFetchType /*= SQL_FETCH_RELATIVE*/)
 {
-	if( m_bNotLoadedFieldsMap )
+	if (m_bNotLoadedFieldsMap)
 	{
 		LoadFieldNamesMap();
 		m_bNotLoadedFieldsMap = false;
 	}
-	CRecordset::Move( nRows, wFetchType );
+	CRecordset::Move(nRows, wFetchType);
 }
 ////////////////////////////////////////////////////////////////
 
 //	Get the field ID by name
 //	GetFieldIndexByName() works, but is case sensitive
-int	CODBCRecordset::GetFieldID( LPCTSTR szName )
+int	CODBCRecordset::GetFieldID(LPCTSTR szName)
 {
-	void*	idx = (void*)-1;
-	CString	cName( szName );
+	void* idx = (void*)-1;
+	CString	cName(szName);
 	cName.MakeUpper();
-	if( ! m_mapNameIdx.Lookup( cName, idx ) )
+	if (!m_mapNameIdx.Lookup(cName, idx))
 		return	-1;
 	return	(int)idx;
 }
 
-CString	CODBCRecordset::GetFieldName( int nField )
+CString	CODBCRecordset::GetFieldName(int nField)
 {
 	//	The field ID is invalid
-	ASSERT( nField >= 0 );
-	ASSERT( nField < GetODBCFieldCount() );
+	ASSERT(nField >= 0);
+	ASSERT(nField < GetODBCFieldCount());
 
 	CString		cName;
-	void*		idx;
+	void* idx;
 	POSITION	pos = m_mapNameIdx.GetStartPosition();
-	while( pos != NULL ) {
-		m_mapNameIdx.GetNextAssoc( pos, cName, idx );
-		if( (int)idx == nField )
+	while (pos != NULL) {
+		m_mapNameIdx.GetNextAssoc(pos, cName, idx);
+		if ((int)idx == nField)
 			return	cName;
 	}
 	cName.Empty();
@@ -202,69 +202,69 @@ CString	CODBCRecordset::GetFieldName( int nField )
 }
 ////////////////////////////////////////////////////////////////
 
-void CODBCRecordset::DoFieldExchange( CFieldExchange* pFX )
+void CODBCRecordset::DoFieldExchange(CFieldExchange* pFX)
 {
-	pFX->SetFieldType( CFieldExchange::outputColumn );
+	pFX->SetFieldType(CFieldExchange::outputColumn);
 
-	
+
 	CString		cFieldName;
-	for( UINT i = 0; i < m_nFields; i++ )
+	for (UINT i = 0; i < m_nFields; i++)
 	{
-		cFieldName.Format( "[%s]", GetFieldName(i) );
-		switch( m_fields[i].m_dwType )
+		cFieldName.Format("[%s]", GetFieldName(i));
+		switch (m_fields[i].m_dwType)
 		{
 		case	DBVT_NULL:
-					break;
+			break;
 		case	DBVT_BOOL:
-					RFX_Bool( pFX, cFieldName, m_fields[i].m_boolVal );
-					break;
+			RFX_Bool(pFX, cFieldName, m_fields[i].m_boolVal);
+			break;
 		case	DBVT_UCHAR:
-					RFX_Byte( pFX, cFieldName, m_fields[i].m_chVal );
-					break;
+			RFX_Byte(pFX, cFieldName, m_fields[i].m_chVal);
+			break;
 		case	DBVT_SHORT:
-					//	CDBVariant::m_iVal is of type short
-					//	RFX_Int() requires parameter of type int.
-					//	Class wizard maps int variable in this case
-					//	but CDBVariand does not have int member.
-					m_fields[i].m_dwType = DBVT_LONG;
-					RFX_Long( pFX, cFieldName, m_fields[i].m_lVal );
-					break;
+			//	CDBVariant::m_iVal is of type short
+			//	RFX_Int() requires parameter of type int.
+			//	Class wizard maps int variable in this case
+			//	but CDBVariand does not have int member.
+			m_fields[i].m_dwType = DBVT_LONG;
+			RFX_Long(pFX, cFieldName, m_fields[i].m_lVal);
+			break;
 		case	DBVT_LONG:
-					RFX_Long( pFX, cFieldName, m_fields[i].m_lVal );
-					break;
+			RFX_Long(pFX, cFieldName, m_fields[i].m_lVal);
+			break;
 		case	DBVT_SINGLE:
-					RFX_Single( pFX, cFieldName, m_fields[i].m_fltVal );
-					break;
+			RFX_Single(pFX, cFieldName, m_fields[i].m_fltVal);
+			break;
 		case	DBVT_DOUBLE:
-					RFX_Double( pFX, cFieldName, m_fields[i].m_dblVal );
-					break;
+			RFX_Double(pFX, cFieldName, m_fields[i].m_dblVal);
+			break;
 		case	DBVT_DATE:
-					RFX_Date( pFX, cFieldName, *m_fields[i].m_pdate );
-					break;
+			RFX_Date(pFX, cFieldName, *m_fields[i].m_pdate);
+			break;
 		case	DBVT_STRING:
-				{
-					CODBCFieldInfo	fi;
-					GetODBCFieldInfo( i, fi );
-					RFX_Text( pFX, cFieldName, *m_fields[i].m_pstring, fi.m_nPrecision );
-					break;
-				}
+		{
+			CODBCFieldInfo	fi;
+			GetODBCFieldInfo(i, fi);
+			RFX_Text(pFX, cFieldName, *m_fields[i].m_pstring, fi.m_nPrecision);
+			break;
+		}
 		case	DBVT_BINARY:
-					RFX_LongBinary( pFX, cFieldName, *(m_fields[i].m_pbinary) );
-					break;
+			RFX_LongBinary(pFX, cFieldName, *(m_fields[i].m_pbinary));
+			break;
 		default:
 			//	Unknown datatype
-			ASSERT( FALSE );
+			ASSERT(FALSE);
 		}
-		m_fields[i].SetNull( FALSE != IsFieldStatusNull( i ) );
+		m_fields[i].SetNull(FALSE != IsFieldStatusNull(i));
 	}
 }
 ////////////////////////////////////////////////////////////////
 
-short CODBCRecordset::GetCFieldType( short nSQLType )
+short CODBCRecordset::GetCFieldType(short nSQLType)
 {
 	short nFieldType = 0;
 
-	switch( nSQLType )
+	switch (nSQLType)
 	{
 	case SQL_BIT:
 		nFieldType = SQL_C_BIT;
@@ -305,8 +305,8 @@ short CODBCRecordset::GetCFieldType( short nSQLType )
 		nFieldType = SQL_C_CHAR;
 		break;
 
-	//	SQL_LONGVARCHAR moved here. 
-	//	Its default value is SQL_C_CHAR
+		//	SQL_LONGVARCHAR moved here. 
+		//	Its default value is SQL_C_CHAR
 	case SQL_LONGVARCHAR:
 	case SQL_BINARY:
 	case SQL_VARBINARY:
@@ -316,59 +316,59 @@ short CODBCRecordset::GetCFieldType( short nSQLType )
 
 	default:
 		//	Unknown data type
-		ASSERT( FALSE );
+		ASSERT(FALSE);
 	}
 
 	return	nFieldType;
 }
 
-bool CODBCRecordset::InsertBinary( CString strQuery, unsigned char* pData, const int nSize )
+bool CODBCRecordset::InsertBinary(CString strQuery, unsigned char* pData, const int nSize)
 {
-	if( !m_pDatabase->IsOpen() )
+	if (!m_pDatabase->IsOpen())
 	{
-		ASSERT( 0 );
+		ASSERT(0);
 		return false;
 	}
 
-	if( (0 == strQuery.GetLength()) || 0 == pData )
+	if ((0 == strQuery.GetLength()) || 0 == pData)
 		return false;
 
-	if( 8000 < nSize )
+	if (8000 < nSize)
 		return false;
 
 	HSTMT		hStmt;
-	SQLTCHAR*	pWriteBuff;
+	SQLTCHAR* pWriteBuff;
 #ifdef _WIN64
-	INT64  ind			= SQL_DATA_AT_EXEC;
+	INT64  ind = SQL_DATA_AT_EXEC;
 #else
 	SQLLEN ind = SQL_DATA_AT_EXEC;
 #endif
 
-	// ÀÌºÎºÐÀ» ¼­¹ö¿¡¼­ »ç¿ëÇÏ°íÀÖ´Â DB°´Ã¼·Î ¹Ù²ãÁà¾ß ÇÔ!!
-	if( SQL_ERROR == SQLAllocHandle(SQL_HANDLE_STMT, m_pDatabase->m_hdbc, &hStmt) )
+	// ï¿½ÌºÎºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½Ö´ï¿½ DBï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½!!
+	if (SQL_ERROR == SQLAllocHandle(SQL_HANDLE_STMT, m_pDatabase->m_hdbc, &hStmt))
 	{
 		return false;
 	}
 	//
 
-	if( SQL_ERROR == SQLPrepare(hStmt,(SQLCHAR*)strQuery.GetBuffer(), SQL_NTS) )
+	if (SQL_ERROR == SQLPrepare(hStmt, (SQLCHAR*)strQuery.GetBuffer(), SQL_NTS))
 	{
 		return false;
 	}
 
-	if( SQL_ERROR == SQLBindParameter(hStmt, 1, SQL_PARAM_INPUT,
-									  SQL_C_BINARY, SQL_BINARY,
-									  nSize, 0, (SQLPOINTER)pData, nSize, &ind) )
+	if (SQL_ERROR == SQLBindParameter(hStmt, 1, SQL_PARAM_INPUT,
+		SQL_C_BINARY, SQL_BINARY,
+		nSize, 0, (SQLPOINTER)pData, nSize, &ind))
 	{
 		return false;
 	}
 
-	if( SQL_ERROR == SQLExecute(hStmt) )
+	if (SQL_ERROR == SQLExecute(hStmt))
 	{
 		return false;
 	}
-	
-	if( SQL_ERROR == SQLParamData(hStmt, (SQLPOINTER*)&pWriteBuff) )
+
+	if (SQL_ERROR == SQLParamData(hStmt, (SQLPOINTER*)&pWriteBuff))
 	{
 		return false;
 	}
@@ -376,115 +376,115 @@ bool CODBCRecordset::InsertBinary( CString strQuery, unsigned char* pData, const
 	int			nWrSize;
 	int			len;
 	SQLRETURN	sqlRet;
-	
-	// ³ª´©¾î¼­ µ¥ÀÌÅÍ Àü¼Û.
-	for( nWrSize = 0; nWrSize < nSize; nWrSize += BINARY_CHUNK_SIZE, pWriteBuff += BINARY_CHUNK_SIZE )
+
+	// ï¿½ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+	for (nWrSize = 0; nWrSize < nSize; nWrSize += BINARY_CHUNK_SIZE, pWriteBuff += BINARY_CHUNK_SIZE)
 	{
-		if( nWrSize + BINARY_CHUNK_SIZE < nSize )
+		if (nWrSize + BINARY_CHUNK_SIZE < nSize)
 			len = BINARY_CHUNK_SIZE;
 		else
 			len = nSize - nWrSize;
 
-		sqlRet =  SQLPutData( hStmt, (SQLPOINTER)pWriteBuff, len );
+		sqlRet = SQLPutData(hStmt, (SQLPOINTER)pWriteBuff, len);
 	}
 
-	// µ¥ÀÌÅÍ Àü¼ÛÀÌ ¼º°øÀûÀ¸·Î Ã³¸®µÇ¾ú´ÂÁö °Ë»ç.
-	if( SQL_ERROR == sqlRet )
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½.
+	if (SQL_ERROR == sqlRet)
 	{
 		return false;
 	}
 
-	if( SQL_ERROR == SQLParamData(hStmt, (SQLPOINTER*)&pWriteBuff) )
+	if (SQL_ERROR == SQLParamData(hStmt, (SQLPOINTER*)&pWriteBuff))
 	{
 		return false;
 	}
 
-	SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
-	
+	SQLFreeHandle(SQL_HANDLE_STMT, hStmt);
+
 	return true;
 }
 
-CDBBinary CODBCRecordset::SelectBinary( CString strQuery )
+CDBBinary CODBCRecordset::SelectBinary(CString strQuery)
 {
-	CDBBinary DBBinary( 5, 5 );
+	CDBBinary DBBinary(5, 5);
 
-	// µ¥ÀÌÅÍ¸¦ °¡Á®¿À±âÀü¿¡ ÀÌÀü¿¡ ÀúÀåµÇ¾îÀÖ´ø µ¥ÀÌÅÍ¸¦ ¸ðµÎ Á¦°ÅÇÔ.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
 	DBBinary.Clear();
 
-	// ÀÛ¾÷ÀÌ Á¤»óÀûÀ¸·Î Ã³¸®µÇ¸é »óÅÂ´Â ÀÚµ¿ÀûÀ¸·Î Á¤»óÀ¸·Î ¹Ù²î±â ¶§¹®,
-	// ±âº»ÀûÀ¸·Î error»óÅ×·Î ¼³Á¤À» ÇØ³õÀ½.
-	DBBinary.SetCurUsedSize( -1 );
+	// ï¿½Û¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½Â´ï¿½ ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½,
+	// ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ errorï¿½ï¿½ï¿½×·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø³ï¿½ï¿½ï¿½.
+	DBBinary.SetCurUsedSize(-1);
 
-	if( 0 == strQuery.GetLength() )
+	if (0 == strQuery.GetLength())
 	{
 		return DBBinary;
 	}
 
 	HSTMT			hStmt;
-	unsigned char	Data[ BINARY_FIELD_MAX_SIZE ]	= {0};
+	unsigned char	Data[BINARY_FIELD_MAX_SIZE] = { 0 };
 #ifdef _WIN64
-	INT64		ind								= SQL_DATA_AT_EXEC;
+	INT64		ind = SQL_DATA_AT_EXEC;
 #else
 	SQLLEN ind = SQL_DATA_AT_EXEC;
 #endif
-	if( SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_STMT, m_pDatabase->m_hdbc, &hStmt) )
-	{
-		return DBBinary;
-	}
-	
-	SQLPrepare( hStmt, (SQLCHAR*)strQuery.GetBuffer(), SQL_NTS );
-
-	if( SQL_ERROR == SQLBindParameter( hStmt, 1, SQL_PARAM_OUTPUT, SQL_C_BINARY, SQL_BINARY, BINARY_FIELD_MAX_SIZE, 
-									   0, (SQLPOINTER)Data, BINARY_FIELD_MAX_SIZE, &ind) )
+	if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_STMT, m_pDatabase->m_hdbc, &hStmt))
 	{
 		return DBBinary;
 	}
 
-	if( SQL_ERROR == SQLExecute(hStmt) )
+	SQLPrepare(hStmt, (SQLCHAR*)strQuery.GetBuffer(), SQL_NTS);
+
+	if (SQL_ERROR == SQLBindParameter(hStmt, 1, SQL_PARAM_OUTPUT, SQL_C_BINARY, SQL_BINARY, BINARY_FIELD_MAX_SIZE,
+		0, (SQLPOINTER)Data, BINARY_FIELD_MAX_SIZE, &ind))
+	{
+		return DBBinary;
+	}
+
+	if (SQL_ERROR == SQLExecute(hStmt))
 	{
 		return DBBinary;
 	}
 
 	SQLLEN sqlLen;
 
-	// ÃÊ±âÈ­. insert¿Í select¸¦ »ç¿ëÇÏ±âÀü¿¡ ¹Ýµå½Ã ÇØÁà¾ß ÇÔ.
-	// ¿©±â¼­ ºÎÅÍ´Â error°¡ ÀÖÀ»½Ã DBBinary.SetCurUsedSize( -1 )¸¦ ¹Ýµå½Ã ÇØÁà¾ß ÇÔ.
+	// ï¿½Ê±ï¿½È­. insertï¿½ï¿½ selectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
+	// ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½ï¿½Í´ï¿½ errorï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ DBBinary.SetCurUsedSize( -1 )ï¿½ï¿½ ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½.
 	DBBinary.Begin();
-	
-	while( SQL_SUCCESS == SQLFetch(hStmt) )
+
+	while (SQL_SUCCESS == SQLFetch(hStmt))
 	{
-		if( !m_pDatabase->IsOpen() )
+		if (!m_pDatabase->IsOpen())
 		{
-			DBBinary.SetCurUsedSize( -1 );
+			DBBinary.SetCurUsedSize(-1);
 			return DBBinary;
 		}
 
-		if( SQL_ERROR == SQLGetData(hStmt, 1, SQL_BINARY, (SQLPOINTER)Data, BINARY_FIELD_MAX_SIZE, &sqlLen) )
+		if (SQL_ERROR == SQLGetData(hStmt, 1, SQL_BINARY, (SQLPOINTER)Data, BINARY_FIELD_MAX_SIZE, &sqlLen))
 		{
-			DBBinary.SetCurUsedSize( -1 );
+			DBBinary.SetCurUsedSize(-1);
 			return DBBinary;
 		}
 
-		// NULLÀ» ÀÐ¾úÀ»½Ã¸¦ À§ÇØ¼­. NULLÀ» ÀÐ¾úÀ»½Ã´Â µ¥ÀÌÅÍ Å©±â°¡ -1ÀÌµÊ.
-		if( -1 == sqlLen )
+		// NULLï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½. NULLï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½â°¡ -1ï¿½Ìµï¿½.
+		if (-1 == sqlLen)
 		{
-			if( 0 != DBBinary.InsertData(Data, 0) )
+			if (0 != DBBinary.InsertData(Data, 0))
 			{
-				DBBinary.SetCurUsedSize( -1 );
+				DBBinary.SetCurUsedSize(-1);
 				return DBBinary;
 			}
 			continue;
 		}
 
-		if( SQL_ERROR == SQLGetData(hStmt, 1, SQL_C_DEFAULT, (SQLPOINTER)Data, sqlLen, &ind) )
+		if (SQL_ERROR == SQLGetData(hStmt, 1, SQL_C_DEFAULT, (SQLPOINTER)Data, sqlLen, &ind))
 		{
-			DBBinary.SetCurUsedSize( -1 );
+			DBBinary.SetCurUsedSize(-1);
 			return DBBinary;
 		}
 
-		if( sqlLen != DBBinary.InsertData(Data, sqlLen) )
+		if (sqlLen != DBBinary.InsertData(Data, sqlLen))
 		{
-			DBBinary.SetCurUsedSize( -1 );
+			DBBinary.SetCurUsedSize(-1);
 			return DBBinary;
 		}
 	}
@@ -497,10 +497,10 @@ CDBBinary CODBCRecordset::SelectBinary( CString strQuery )
 
 ////////////////////////////////////////////////////////////////
 
-void	CODBCRecordset::AllocDataBuffer( CDBVariant& varValue, CODBCFieldInfo& fi )
+void	CODBCRecordset::AllocDataBuffer(CDBVariant& varValue, CODBCFieldInfo& fi)
 {
-	int	nFieldType = GetCFieldType( fi.m_nSQLType );
-	switch( nFieldType )
+	int	nFieldType = GetCFieldType(fi.m_nSQLType);
+	switch (nFieldType)
 	{
 	case SQL_C_BIT:
 		varValue.m_dwType = DBVT_BOOL;
@@ -543,7 +543,7 @@ void	CODBCRecordset::AllocDataBuffer( CDBVariant& varValue, CODBCFieldInfo& fi )
 
 	default:
 		//	Unknown data type
-		ASSERT( FALSE );
+		ASSERT(FALSE);
 	}
 }
 ////////////////////////////////////////////////////////////////
@@ -558,25 +558,25 @@ void	CODBCRecordset::AllocDataBuffer( CDBVariant& varValue, CODBCFieldInfo& fi )
 //
 ////////////////////////////////////////////////////////////////
 
-void	BinaryToString( CString& cStr, const CLongBinary& bin, bool bExpand )
+void	BinaryToString(CString& cStr, const CLongBinary& bin, bool bExpand)
 {
-	int	nSize = min( (int)bin.m_dwDataLength, cStr.GetLength() );
-	if( bExpand )
+	int	nSize = min((int)bin.m_dwDataLength, cStr.GetLength());
+	if (bExpand)
 		nSize = bin.m_dwDataLength;
 
-	if( nSize < 1 ) {
+	if (nSize < 1) {
 		cStr.Empty();
 		return;
 	}
 
-	void*	p = ::GlobalLock( bin.m_hData );
-	if( p == NULL )
+	void* p = ::GlobalLock(bin.m_hData);
+	if (p == NULL)
 		::AfxThrowMemoryException();
-	
-	char* pStr = cStr.GetBuffer( nSize );
-	memcpy( pStr, p, nSize );
-	cStr.ReleaseBuffer( nSize );
-	::GlobalUnlock( bin.m_hData );
+
+	char* pStr = cStr.GetBuffer(nSize);
+	memcpy(pStr, p, nSize);
+	cStr.ReleaseBuffer(nSize);
+	::GlobalUnlock(bin.m_hData);
 }
 ////////////////////////////////////////////////////////////////
 
@@ -585,7 +585,7 @@ CDBField::CDBField() {
 }
 ////////////////////////////////////////////////////////////////
 
-CDBField::CDBField( const CDBField& dbv ) {
+CDBField::CDBField(const CDBField& dbv) {
 	m_bIsNull = true;
 }
 ////////////////////////////////////////////////////////////////
@@ -596,144 +596,144 @@ CDBField::~CDBField() {
 
 bool	CDBField::AsBool()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	false;
 
 	CString	cValue;
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	false;
+		return	false;
 
 	case	DBVT_BOOL:
-				return	(m_boolVal == TRUE);
+		return	(m_boolVal == TRUE);
 
 	case	DBVT_UCHAR:
-				return	(m_chVal == 'T' || m_chVal == '1');
+		return	(m_chVal == 'T' || m_chVal == '1');
 
 	case	DBVT_SHORT:
-				return	(m_iVal != 0);
+		return	(m_iVal != 0);
 
 	case	DBVT_LONG:
-				return	(m_lVal != 0);
+		return	(m_lVal != 0);
 
 	case	DBVT_SINGLE:
-				return	(m_fltVal != 0.0);
+		return	(m_fltVal != 0.0);
 
 	case	DBVT_DOUBLE:
-				return	(m_dblVal != 0.0);
+		return	(m_dblVal != 0.0);
 
 	case	DBVT_DATE:
-				//	Cannot convert date to bool
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to bool
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				if( m_pstring->GetLength() < 1 )
-					return	false;
-				return	((*m_pstring)[0] == 'T' || (*m_pstring)[0] == '1');
+		ASSERT(m_pstring != NULL);
+		if (m_pstring->GetLength() < 1)
+			return	false;
+		return	((*m_pstring)[0] == 'T' || (*m_pstring)[0] == '1');
 
 	case	DBVT_BINARY:
-				//	Cannot convert long binary to bool
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert long binary to bool
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	false;
 }
 
 unsigned char	CDBField::AsChar()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	' ';
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	' ';
+		return	' ';
 
 	case	DBVT_BOOL:
-				return	(m_boolVal) ? 'T' : 'F';
+		return	(m_boolVal) ? 'T' : 'F';
 
 	case	DBVT_UCHAR:
-				return	m_chVal;
+		return	m_chVal;
 
 	case	DBVT_SHORT:
-				return	(unsigned char)m_iVal;
+		return	(unsigned char)m_iVal;
 
 	case	DBVT_LONG:
-				return	(unsigned char)m_lVal;
+		return	(unsigned char)m_lVal;
 
 	case	DBVT_SINGLE:
-				return	(unsigned char)m_fltVal;
+		return	(unsigned char)m_fltVal;
 
 	case	DBVT_DOUBLE:
-				return	(unsigned char)m_dblVal;
+		return	(unsigned char)m_dblVal;
 
 	case	DBVT_DATE:
-				//	Cannot convert date to unsigned char
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to unsigned char
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				if( m_pstring->GetLength() < 1 )
-					return	' ';
-				return	(unsigned char)((*m_pstring)[0]);
+		ASSERT(m_pstring != NULL);
+		if (m_pstring->GetLength() < 1)
+			return	' ';
+		return	(unsigned char)((*m_pstring)[0]);
 
 	case	DBVT_BINARY:
-				//	Cannot convert long binary to unsigned char
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert long binary to unsigned char
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	' ';
 }
 
 short	CDBField::AsShort()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	0;
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	0;
+		return	0;
 
 	case	DBVT_BOOL:
-				return	m_boolVal ? 1 : 0;
+		return	m_boolVal ? 1 : 0;
 
 	case	DBVT_UCHAR:
-				return	(short)m_chVal;
+		return	(short)m_chVal;
 
 	case	DBVT_SHORT:
-				return	m_iVal;
+		return	m_iVal;
 
 	case	DBVT_LONG:
-				return	(short)m_lVal;
+		return	(short)m_lVal;
 
 	case	DBVT_SINGLE:
-				return	(short)m_fltVal;
+		return	(short)m_fltVal;
 
 	case	DBVT_DOUBLE:
-				return	(short)m_dblVal;
+		return	(short)m_dblVal;
 
 	case	DBVT_DATE:
-				//	Cannot convert date to short
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to short
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				return	(short)atoi( *m_pstring );
+		ASSERT(m_pstring != NULL);
+		return	(short)atoi(*m_pstring);
 
 	case	DBVT_BINARY:
-				//	Cannot conver long binary to short
-				ASSERT( FALSE );
-				break;
+		//	Cannot conver long binary to short
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	0;
 }
 
@@ -744,193 +744,193 @@ int		CDBField::AsInt()	const
 
 long	CDBField::AsLong()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	0;
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	0;
+		return	0;
 
 	case	DBVT_BOOL:
-				return	m_boolVal ? 1 : 0;
+		return	m_boolVal ? 1 : 0;
 
 	case	DBVT_UCHAR:
-				return	(long)m_chVal;
+		return	(long)m_chVal;
 
 	case	DBVT_SHORT:
-				return	(long)m_iVal;
+		return	(long)m_iVal;
 
 	case	DBVT_LONG:
-				return	m_lVal;
+		return	m_lVal;
 
 	case	DBVT_SINGLE:
-				return	(long)m_fltVal;
+		return	(long)m_fltVal;
 
 	case	DBVT_DOUBLE:
-				return	(long)m_dblVal;
+		return	(long)m_dblVal;
 
 	case	DBVT_DATE:
-				//	Cannot convert date to long
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to long
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				return	atol( *m_pstring );
+		ASSERT(m_pstring != NULL);
+		return	atol(*m_pstring);
 
 	case	DBVT_BINARY:
-				//	Cannot conver long binary to long
-				ASSERT( FALSE );
-				break;
+		//	Cannot conver long binary to long
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	0;
 }
 
 float	CDBField::AsFloat()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	0.0;
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	0.0;
+		return	0.0;
 
 	case	DBVT_BOOL:
-				return	(float)(m_boolVal ? 1.0 : 0.0);
+		return	(float)(m_boolVal ? 1.0 : 0.0);
 
 	case	DBVT_UCHAR:
-				return	(float)m_chVal;
+		return	(float)m_chVal;
 
 	case	DBVT_SHORT:
-				return	(float)m_iVal;
+		return	(float)m_iVal;
 
 	case	DBVT_LONG:
-				return	(float)m_lVal;
+		return	(float)m_lVal;
 
 	case	DBVT_SINGLE:
-				return	m_fltVal;
+		return	m_fltVal;
 
 	case	DBVT_DOUBLE:
-				return	(float)m_dblVal;
+		return	(float)m_dblVal;
 
 	case	DBVT_DATE:
-				//	Cannot convert date to float
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to float
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				return	(float)atof( *m_pstring );
+		ASSERT(m_pstring != NULL);
+		return	(float)atof(*m_pstring);
 
 	case	DBVT_BINARY:
-				//	Cannot conver long binary to float
-				ASSERT( FALSE );
-				break;
+		//	Cannot conver long binary to float
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	0.0;
 }
 
 double	CDBField::AsDouble()	const
 {
-	if( IsNull() )
+	if (IsNull())
 		return	0.0;
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-				return	0.0;
+		return	0.0;
 
 	case	DBVT_BOOL:
-				return	m_boolVal ? 1.0 : 0.0;
+		return	m_boolVal ? 1.0 : 0.0;
 
 	case	DBVT_UCHAR:
-				return	(double)m_chVal;
+		return	(double)m_chVal;
 
 	case	DBVT_SHORT:
-				return	(double)m_iVal;
+		return	(double)m_iVal;
 
 	case	DBVT_LONG:
-				return	(double)m_lVal;
+		return	(double)m_lVal;
 
 	case	DBVT_SINGLE:
-				return	(double)m_fltVal;
+		return	(double)m_fltVal;
 
 	case	DBVT_DOUBLE:
-				return	m_dblVal;
+		return	m_dblVal;
 
 	case	DBVT_DATE:
-				//	Cannot convert date to double
-				ASSERT( FALSE );
-				break;
+		//	Cannot convert date to double
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_STRING:
-				ASSERT( m_pstring != NULL );
-				return	atof( *m_pstring );
+		ASSERT(m_pstring != NULL);
+		return	atof(*m_pstring);
 
 	case	DBVT_BINARY:
-				//	Cannot conver long binary to double
-				ASSERT( FALSE );
-				break;
+		//	Cannot conver long binary to double
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	0.0;
 }
 
 COleDateTime	CDBField::AsDate()	const
 {
 	COleDateTime	date;
-	if( IsNull() ) {
-		date.SetStatus( COleDateTime::null );
+	if (IsNull()) {
+		date.SetStatus(COleDateTime::null);
 		return	date;
 	}
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			date.SetStatus( COleDateTime::null );
-			return	date;
+		date.SetStatus(COleDateTime::null);
+		return	date;
 
 	case	DBVT_BOOL:
-			date.SetStatus( COleDateTime::invalid );
-			return	date;
+		date.SetStatus(COleDateTime::invalid);
+		return	date;
 
 	case	DBVT_UCHAR:
-			date.SetStatus( COleDateTime::invalid );
-			return	date;
+		date.SetStatus(COleDateTime::invalid);
+		return	date;
 
 	case	DBVT_SHORT:
-			return	COleDateTime( (time_t)m_iVal );
+		return	COleDateTime((time_t)m_iVal);
 
 	case	DBVT_LONG:
-			return	COleDateTime( (time_t)m_lVal );
+		return	COleDateTime((time_t)m_lVal);
 
 	case	DBVT_SINGLE:
-			return	COleDateTime( (time_t)m_fltVal );
+		return	COleDateTime((time_t)m_fltVal);
 
 	case	DBVT_DOUBLE:
-			return	COleDateTime( (time_t)m_dblVal );
+		return	COleDateTime((time_t)m_dblVal);
 
 	case	DBVT_DATE:
-			ASSERT( m_pdate != NULL );
-			return	COleDateTime(	m_pdate->year, m_pdate->month, m_pdate->day,
-									m_pdate->hour, m_pdate->minute, m_pdate->second );
+		ASSERT(m_pdate != NULL);
+		return	COleDateTime(m_pdate->year, m_pdate->month, m_pdate->day,
+			m_pdate->hour, m_pdate->minute, m_pdate->second);
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			date.ParseDateTime( *m_pstring );
-			return	date;
+		ASSERT(m_pstring != NULL);
+		date.ParseDateTime(*m_pstring);
+		return	date;
 
 	case	DBVT_BINARY:
-			//	Cannot conver long binary to date
-			ASSERT( FALSE );
-			break;
+		//	Cannot conver long binary to date
+		ASSERT(FALSE);
+		break;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
-	date.SetStatus( COleDateTime::invalid );
+	ASSERT(FALSE);
+	date.SetStatus(COleDateTime::invalid);
 	return	date;
 }
 
@@ -938,58 +938,58 @@ CString		CDBField::AsString()	const
 {
 	CString	cValue;
 
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			return	cValue;
+		return	cValue;
 
 	case	DBVT_BOOL:
-			return	CString( m_boolVal ? "T" : "F" );
+		return	CString(m_boolVal ? "T" : "F");
 
 	case	DBVT_UCHAR:
-			return	CString( (TCHAR)m_chVal );
+		return	CString((TCHAR)m_chVal);
 
 	case	DBVT_SHORT:
-			cValue.Format( "%hd", m_iVal );
-			return	cValue;
+		cValue.Format("%hd", m_iVal);
+		return	cValue;
 
 	case	DBVT_LONG:
-			cValue.Format( "%ld", m_lVal );
-			return	cValue;
+		cValue.Format("%ld", m_lVal);
+		return	cValue;
 
 	case	DBVT_SINGLE:
-			cValue.Format( "%f", m_fltVal );
-			return	cValue;
+		cValue.Format("%f", m_fltVal);
+		return	cValue;
 
 	case	DBVT_DOUBLE:
-			cValue.Format( "%f", m_dblVal );
-			return	cValue;
+		cValue.Format("%f", m_dblVal);
+		return	cValue;
 
 	case	DBVT_DATE:
-		{
-			ASSERT( m_pdate != NULL );
-			COleDateTime	date( m_pdate->year, m_pdate->month, m_pdate->day,
-								  m_pdate->hour, m_pdate->minute, m_pdate->second );
-			return	date.Format();
-		}
+	{
+		ASSERT(m_pdate != NULL);
+		COleDateTime	date(m_pdate->year, m_pdate->month, m_pdate->day,
+			m_pdate->hour, m_pdate->minute, m_pdate->second);
+		return	date.Format();
+	}
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			return	*m_pstring;
+		ASSERT(m_pstring != NULL);
+		return	*m_pstring;
 
 	case	DBVT_BINARY:
-			ASSERT( m_pbinary != NULL );
-			::BinaryToString( cValue, *m_pbinary, true );
-			return	cValue;
+		ASSERT(m_pbinary != NULL);
+		::BinaryToString(cValue, *m_pbinary, true);
+		return	cValue;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	cValue;
 }
 
-CLongBinary*	CDBField::AsBinary()	const
+CLongBinary* CDBField::AsBinary()	const
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			return	NULL;
+		return	NULL;
 
 	case	DBVT_BOOL:
 	case	DBVT_UCHAR:
@@ -999,15 +999,15 @@ CLongBinary*	CDBField::AsBinary()	const
 	case	DBVT_DOUBLE:
 	case	DBVT_DATE:
 	case	DBVT_STRING:
-			//	Cannot convert to long binary
-			ASSERT( FALSE );
-			break;
+		//	Cannot convert to long binary
+		ASSERT(FALSE);
+		break;
 
 	case	DBVT_BINARY:
-			return	m_pbinary;
+		return	m_pbinary;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	m_pbinary;
 }
 ////////////////////////////////////////////////////////////////
@@ -1018,366 +1018,366 @@ CLongBinary*	CDBField::AsBinary()	const
 //	Assignment operators
 ////////////////////////////////////////////////////////////////
 
-CDBField& CDBField::operator =( const bool bVal )
+CDBField& CDBField::operator =(const bool bVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = bVal;
-			return	*this;
+		m_boolVal = bVal;
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (bVal) ? 'T' : 'F';
-			return	*this;
+		m_chVal = (bVal) ? 'T' : 'F';
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (bVal) ? 1 : 0;
-			return	*this;
+		m_iVal = (bVal) ? 1 : 0;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (bVal) ? 1 : 0;
-			return	*this;
+		m_lVal = (bVal) ? 1 : 0;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)((bVal) ? 1.0 : 0.0);
-			return	*this;
+		m_fltVal = (float)((bVal) ? 1.0 : 0.0);
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)((bVal) ? 1.0 : 0.0);
-			return	*this;
+		m_dblVal = (double)((bVal) ? 1.0 : 0.0);
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%c", (bVal) ? 'T' : 'F' );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%c", (bVal) ? 'T' : 'F');
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const char chVal )
+CDBField& CDBField::operator =(const char chVal)
 {
-	return	operator =( (unsigned char) chVal );
+	return	operator =((unsigned char)chVal);
 }
-CDBField& CDBField::operator =( const unsigned char chVal )
+CDBField& CDBField::operator =(const unsigned char chVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (chVal == 'T' || chVal == '1');
-			return	*this;
+		m_boolVal = (chVal == 'T' || chVal == '1');
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)chVal;
-			return	*this;
+		m_chVal = (unsigned char)chVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)chVal;
-			return	*this;
+		m_iVal = (short)chVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)chVal;
-			return	*this;
+		m_lVal = (long)chVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)chVal;
-			return	*this;
+		m_fltVal = (float)chVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)chVal;
-			return	*this;
+		m_dblVal = (double)chVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%c", chVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%c", chVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const short sVal )
+CDBField& CDBField::operator =(const short sVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (sVal != 0);
-			return	*this;
+		m_boolVal = (sVal != 0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)sVal;
-			return	*this;
+		m_chVal = (unsigned char)sVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)sVal;
-			return	*this;
+		m_iVal = (short)sVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)sVal;
-			return	*this;
+		m_lVal = (long)sVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)sVal;
-			return	*this;
+		m_fltVal = (float)sVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)sVal;
-			return	*this;
+		m_dblVal = (double)sVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%hd", sVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%hd", sVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const int iVal )
+CDBField& CDBField::operator =(const int iVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (iVal != 0);
-			return	*this;
+		m_boolVal = (iVal != 0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)iVal;
-			return	*this;
+		m_chVal = (unsigned char)iVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)iVal;
-			return	*this;
+		m_iVal = (short)iVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)iVal;
-			return	*this;
+		m_lVal = (long)iVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)iVal;
-			return	*this;
+		m_fltVal = (float)iVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)iVal;
-			return	*this;
+		m_dblVal = (double)iVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%d", iVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%d", iVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const long lVal )
+CDBField& CDBField::operator =(const long lVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (lVal != 0);
-			return	*this;
+		m_boolVal = (lVal != 0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)lVal;
-			return	*this;
+		m_chVal = (unsigned char)lVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)lVal;
-			return	*this;
+		m_iVal = (short)lVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)lVal;
-			return	*this;
+		m_lVal = (long)lVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)lVal;
-			return	*this;
+		m_fltVal = (float)lVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)lVal;
-			return	*this;
+		m_dblVal = (double)lVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%ld", lVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%ld", lVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const float fltVal )
+CDBField& CDBField::operator =(const float fltVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (fltVal != 0.0);
-			return	*this;
+		m_boolVal = (fltVal != 0.0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)fltVal;
-			return	*this;
+		m_chVal = (unsigned char)fltVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)fltVal;
-			return	*this;
+		m_iVal = (short)fltVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)fltVal;
-			return	*this;
+		m_lVal = (long)fltVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)fltVal;
-			return	*this;
+		m_fltVal = (float)fltVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)fltVal;
-			return	*this;
+		m_dblVal = (double)fltVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%f", fltVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%f", fltVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const double dblVal )
+CDBField& CDBField::operator =(const double dblVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (dblVal != 0.0);
-			return	*this;
+		m_boolVal = (dblVal != 0.0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)dblVal;
-			return	*this;
+		m_chVal = (unsigned char)dblVal;
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)dblVal;
-			return	*this;
+		m_iVal = (short)dblVal;
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)dblVal;
-			return	*this;
+		m_lVal = (long)dblVal;
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)dblVal;
-			return	*this;
+		m_fltVal = (float)dblVal;
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)dblVal;
-			return	*this;
+		m_dblVal = (double)dblVal;
+		return	*this;
 
 	case	DBVT_DATE:
-			//	Cannot convert to datetime
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to datetime
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			m_pstring->Format( "%f", dblVal );
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		m_pstring->Format("%f", dblVal);
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const COleDateTime& dtVal )
+CDBField& CDBField::operator =(const COleDateTime& dtVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
 	case	DBVT_UCHAR:
@@ -1385,97 +1385,97 @@ CDBField& CDBField::operator =( const COleDateTime& dtVal )
 	case	DBVT_LONG:
 	case	DBVT_SINGLE:
 	case	DBVT_DOUBLE:
-			//	Cannot convert to the current data type
-			ASSERT( FALSE );
-			return	*this;
+		//	Cannot convert to the current data type
+		ASSERT(FALSE);
+		return	*this;
 
 	case	DBVT_DATE:
-			ASSERT( m_pdate != NULL );
-			m_pdate->year	= dtVal.GetYear();
-			m_pdate->month	= dtVal.GetMonth();
-			m_pdate->day	= dtVal.GetDay();
-			m_pdate->hour	= dtVal.GetHour();
-			m_pdate->minute	= dtVal.GetMinute();
-			m_pdate->second = dtVal.GetSecond();
-			m_pdate->fraction = 0;
-			return	*this;
+		ASSERT(m_pdate != NULL);
+		m_pdate->year = dtVal.GetYear();
+		m_pdate->month = dtVal.GetMonth();
+		m_pdate->day = dtVal.GetDay();
+		m_pdate->hour = dtVal.GetHour();
+		m_pdate->minute = dtVal.GetMinute();
+		m_pdate->second = dtVal.GetSecond();
+		m_pdate->fraction = 0;
+		return	*this;
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			*m_pstring = dtVal.Format();
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		*m_pstring = dtVal.Format();
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
-CDBField& CDBField::operator =( const CString& cVal )
+CDBField& CDBField::operator =(const CString& cVal)
 {
-	return	operator =( (LPCTSTR)cVal );
+	return	operator =((LPCTSTR)cVal);
 }
-CDBField& CDBField::operator =( const LPCTSTR szVal )
+CDBField& CDBField::operator =(const LPCTSTR szVal)
 {
-	switch( m_dwType ) {
+	switch (m_dwType) {
 	case	DBVT_NULL:
-			//	Undefined data type
-			ASSERT( FALSE );
+		//	Undefined data type
+		ASSERT(FALSE);
 
 	case	DBVT_BOOL:
-			m_boolVal = (szVal != NULL || atoi( szVal ) != 0 );
-			return	*this;
+		m_boolVal = (szVal != NULL || atoi(szVal) != 0);
+		return	*this;
 
 	case	DBVT_UCHAR:
-			m_chVal = (unsigned char)szVal[0];
-			return	*this;
+		m_chVal = (unsigned char)szVal[0];
+		return	*this;
 
 	case	DBVT_SHORT:
-			m_iVal = (short)atoi( szVal );
-			return	*this;
+		m_iVal = (short)atoi(szVal);
+		return	*this;
 
 	case	DBVT_LONG:
-			m_lVal = (long)atol( szVal );
-			return	*this;
+		m_lVal = (long)atol(szVal);
+		return	*this;
 
 	case	DBVT_SINGLE:
-			m_fltVal = (float)atof( szVal );
-			return	*this;
+		m_fltVal = (float)atof(szVal);
+		return	*this;
 
 	case	DBVT_DOUBLE:
-			m_dblVal = (double)atof( szVal );
-			return	*this;
+		m_dblVal = (double)atof(szVal);
+		return	*this;
 
 	case	DBVT_DATE:
-		{
-			ASSERT( m_pdate != NULL );
-			COleDateTime	dt;
-			dt.ParseDateTime( szVal );
-			m_pdate->year	= dt.GetYear();
-			m_pdate->month	= dt.GetMonth();
-			m_pdate->day	= dt.GetDay();
-			m_pdate->hour	= dt.GetHour();
-			m_pdate->minute	= dt.GetMinute();
-			m_pdate->second = dt.GetSecond();
-			m_pdate->fraction = 0;
-			return	*this;
-		}
+	{
+		ASSERT(m_pdate != NULL);
+		COleDateTime	dt;
+		dt.ParseDateTime(szVal);
+		m_pdate->year = dt.GetYear();
+		m_pdate->month = dt.GetMonth();
+		m_pdate->day = dt.GetDay();
+		m_pdate->hour = dt.GetHour();
+		m_pdate->minute = dt.GetMinute();
+		m_pdate->second = dt.GetSecond();
+		m_pdate->fraction = 0;
+		return	*this;
+	}
 
 	case	DBVT_STRING:
-			ASSERT( m_pstring != NULL );
-			*m_pstring = szVal;
-			return	*this;
+		ASSERT(m_pstring != NULL);
+		*m_pstring = szVal;
+		return	*this;
 
 	case	DBVT_BINARY:
-			//	CRecordset does not support writing to CLongBinary fields
-			ASSERT( FALSE );
-			return	*this;
+		//	CRecordset does not support writing to CLongBinary fields
+		ASSERT(FALSE);
+		return	*this;
 	}
 	//	Undefined data type
-	ASSERT( FALSE );
+	ASSERT(FALSE);
 	return	*this;
 }
 ////////////////////////////////////////////////////////////////

@@ -75,7 +75,7 @@ __forceinline bool ZCheckHackProcess()
 			return true;
 	}
 
-	/*
+	
 	char *kernelStrings[] = {
 	"\xc\x27\x27\x2f\x65\x79\x78\x27\x2e\x25\x39\x2e\x20", // kernel32.dll
 	"\x11\x3f\x25\x2e\x38\x2e\x39\x1b\x39\x2e\x2c\x2c\x3e\x29\x2e\xf\x38\x2" // IsDebuggerPresent
@@ -93,9 +93,6 @@ __forceinline bool ZCheckHackProcess()
 		FreeLibrary(hKernel32);
 	}
 	if (isDebuggerPresent && isDebuggerPresent())
-		bHack = true;
-	*/
-	if (IsDebuggerPresent())
 		bHack = true;
 
 #endif

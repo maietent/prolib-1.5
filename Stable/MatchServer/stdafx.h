@@ -6,16 +6,16 @@
 #define _AFX_ALL_WARNINGS
 #define POINTER_64 __ptr64
 
-#include <afxwin.h>
-#include <afxext.h>
-#include <afxdisp.h>
-
-#include <afxdtctl.h>
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>
-#endif
-#include <afxrich.h>
-#include <afxcview.h>
+//#include <afxwin.h>
+//#include <afxext.h>
+//#include <afxdisp.h>
+//
+//#include <afxdtctl.h>
+//#ifndef _AFX_NO_AFXCMN_SUPPORT
+//#include <afxcmn.h>
+//#endif
+//#include <afxrich.h>
+//#include <afxcview.h>
 
 #include "winsock2.h"
 #include "windows.h"

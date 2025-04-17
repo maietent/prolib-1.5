@@ -6,7 +6,7 @@
 #include "Windows.h"
 #include "Winbase.h"
 #include "MDebug.h"
-#include "assert.h"
+#include "ASSERT.h"
 
 //////////////////////////////////////////////////////////////////////////
 //

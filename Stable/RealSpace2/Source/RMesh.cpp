@@ -382,7 +382,7 @@ void RMesh::TrimStr(const char* szSrcStr, char* outStr)
 			char buf[256];
 			sprintf(buf, "문자열 \"%s\"왼쪽에 공백 있음. \n", szSrcStr);
 			mlog(buf);
-			assert(!"문자열 왼쪽에 공백 있음");
+			//ASSERT(!"문자열 왼쪽에 공백 있음");
 		}
 	}
 	// 오른쪽 공백찾기
@@ -394,7 +394,7 @@ void RMesh::TrimStr(const char* szSrcStr, char* outStr)
 			char buf[256];
 			sprintf(buf, "문자열 \"%s\"오른쪽에 공백 있음. \n", szInputMapName);
 			mlog(buf);
-			assert(!"문자열 오른쪽에 공백 있음");
+			//ASSERT(!"문자열 오른쪽에 공백 있음");
 			//szInputMapName[i] = '\0'; // 에러를 찾기위해 공백 제거하지 않는다.
 		}
 		else

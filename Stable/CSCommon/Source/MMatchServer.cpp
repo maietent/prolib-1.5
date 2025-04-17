@@ -908,15 +908,6 @@ bool MMatchServer::Create(int nPort)
 		mlog( "Init Battletime Reward Machine Fail.\n" );
 		return false;
 	}
-	
-//#if defined(LOCALE_NHNUSA) || defined(_DEBUG)
-//	if( !m_HackingChatList.Init() )
-//	{
-//		mlog( "init hacking chat fail.\n" );
-//		return false;
-//	}
-//#endif
-
 
 	int nUDPPort = MATCHSERVER_DEFAULT_UDP_PORT;
 	if( nUDPPort != MGetServerConfig()->GetServerUDPPort() )

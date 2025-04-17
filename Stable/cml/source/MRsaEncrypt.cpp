@@ -78,7 +78,7 @@ string RSADecryptString( const byte *privKeyBuff, size_t keyLength, const char *
 
 	//	if ( header.GetCRC() != nCRC)
 	//	{
-	//		assert( "File CRC error.");
+	//		ASSERT( "File CRC error.");
 	//		return false;
 	//	}
 
@@ -90,7 +90,7 @@ string RSADecryptString( const byte *privKeyBuff, size_t keyLength, const char *
 	//// Error
 	//catch ( CryptoPP::Exception)
 	//{
-	//	assert( 0);
+	//	ASSERT( 0);
 	//}
 
 

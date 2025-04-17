@@ -59,8 +59,8 @@ static char* AddCommaToNum(int num, char *buf, int buflen)
 
 	char* saved = buf;
 
-	assert(len > 0); 
-	assert(buflen >= len + ((len - 1) / 3) + 1); 
+	ASSERT(len > 0); 
+	ASSERT(buflen >= len + ((len - 1) / 3) + 1); 
 
 	switch ((len - 1) % 3) { 
 		case 3: /* fake label to make gcc happy */ 

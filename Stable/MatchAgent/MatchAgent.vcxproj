@@ -33,7 +33,7 @@
     <SccLocalPath />
     <SccProvider />
     <Keyword>MFCProj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -44,9 +44,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -92,6 +92,9 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../../Binaries/Server</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -201,10 +204,10 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>../CML/Lib/zlib64.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>Runtime/MatchAgent64.exe</OutputFile>
+      <OutputFile>../../Binaries/Server/MatchAgent.exe</OutputFile>
       <IgnoreSpecificDefaultLibraries>libci.lib;comsuppw.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -219,14 +222,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChildFrm.cpp" />
-    <ClCompile Include="CommandLogView.cpp" />
-    <ClCompile Include="ExceptionAttacher.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="MatchAgent.cpp" />
-    <ClCompile Include="MatchAgentDoc.cpp" />
-    <ClCompile Include="MatchAgentView.cpp" />
-    <ClCompile Include="OutputView.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -241,14 +237,6 @@
     <ClCompile Include="MStageAgent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChildFrm.h" />
-    <ClInclude Include="CommandLogView.h" />
-    <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="MatchAgent.h" />
-    <ClInclude Include="MatchAgentDoc.h" />
-    <ClInclude Include="MatchAgentView.h" />
-    <ClInclude Include="OutputView.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="MAgentClient.h" />
     <ClInclude Include="MAgentConfig.h" />
@@ -258,14 +246,7 @@
     <ClInclude Include="MStageAgent.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\MatchAgent.ico" />
-    <None Include="res\MatchAgent.rc2" />
-    <None Include="res\MatchAgentDoc.ico" />
-    <None Include="res\Toolbar.bmp" />
     <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="MatchAgent.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cml\cml.vcxproj">

@@ -1,16 +1,16 @@
 #include "stdafx.h"
 #include "MBMatchServer.h"
-#include "MBMatchNHNAuth.h"
+//#include "MBMatchNHNAuth.h"
 #include "MBMatchAsyncDBJob_NHNLogin.h"
 #include "MBMatchAsyncDBJob_GameOnLogin.h"
 #include "MBMatchAsyncDBJob_NetmarbleLogin.h"
 #include "MMatchConfig.h"
 #include "MMatchLocale.h"
 #include "MMatchAuth.h"
-#include "MBMatchAuth.h"
+//#include "MBMatchAuth.h"
 #include "MMatchStatus.h"
 #include "MMatchGlobal.h"
-#include "MBMatchGameOnAuth.h"
+//#include "MBMatchGameOnAuth.h"
 
 
 void MBMatchServer::OnRequestAccountCharList(const MUID& uidPlayer, unsigned char* pbyGuidAckMsg)

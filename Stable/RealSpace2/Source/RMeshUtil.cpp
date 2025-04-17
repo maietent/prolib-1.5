@@ -299,12 +299,12 @@ bool RVertexBuffer::Update(char* pVertex,DWORD fvf,int VertexSize,int VertexCnt)
 
 void RVertexBuffer::Lock() {
 	if(m_vb) m_vb->Lock( 0, 0, (VOID**)&m_v, m_dwLockFlag );
-//	else 	 assert(0);
+//	else 	 ASSERT(0);
 }
 
 void RVertexBuffer::Unlock() {
 	if(m_vb) m_vb->Unlock();
-//	else	 assert(0);
+//	else	 ASSERT(0);
 }
 
 void RVertexBuffer::SetStreamSource()

@@ -31,13 +31,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -79,6 +79,9 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>..\..\Binaries\Server\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -180,6 +183,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>../CML/Lib/zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -224,6 +228,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>../CML/Lib/zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -232,7 +237,7 @@
       <IgnoreSpecificDefaultLibraries>libci.lib;libc.lib;comsuppw.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)MatchServer.pdb</ProgramDatabaseFile>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -250,16 +255,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChildFrm.cpp" />
-    <ClCompile Include="CommandLogView.cpp" />
-    <ClCompile Include="ConsoleBar.cpp" />
-    <ClCompile Include="ExceptionAttacher.cpp" />
-    <ClCompile Include="MainFrm.cpp" />
-    <ClCompile Include="MatchServer.cpp" />
-    <ClCompile Include="MatchServerDoc.cpp" />
-    <ClCompile Include="MatchServerView.cpp" />
-    <ClCompile Include="MMonitor.cpp" />
-    <ClCompile Include="OutputView.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -298,13 +294,6 @@
     <ClCompile Include="MBMatchKillTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChildFrm.h" />
-    <ClInclude Include="CommandLogView.h" />
-    <ClInclude Include="MainFrm.h" />
-    <ClInclude Include="MatchServer.h" />
-    <ClInclude Include="MatchServerDoc.h" />
-    <ClInclude Include="MatchServerView.h" />
-    <ClInclude Include="OutputView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TrayIcon.h" />
@@ -338,9 +327,6 @@
     <None Include="res\MatchServerDoc.ico" />
     <None Include="ReadMe.txt" />
     <None Include="res\Toolbar.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="MatchServer.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cml\cml.vcxproj">

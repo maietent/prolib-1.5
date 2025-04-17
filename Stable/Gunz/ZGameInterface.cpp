@@ -1601,7 +1601,7 @@ void ZGameInterface::OnLoginCreate(void)
 			//ShowWidget("ServerAddress", true);
 			//ShowWidget("ServerPort", true);
 			//!FindMe ServerIp
-			pServerList->AddServer("GunZ", "18.118.31.252", 6000, 2, 0, 500, true);
+			pServerList->AddServer("GunZ", "127.0.0.1", 6000, 2, 0, 500, true);
 			pServerList->SetCurrSel(0);
 		//}
 #endif
@@ -6796,7 +6796,7 @@ void ZGameInterface::OnResponseServerStatusInfoList( const int nListCount, void*
 
 			int nRow = 0;
 			int nCol = 0;
-			char* pszAgentIP = "";
+			char* pszAgentIP = _AGENT_IP;
 
 			// ������o AI����A�� ������������ A��A�� C�ͨ�AC��AU
 			sprintf( szServName, "%s", pss->m_szServerName);

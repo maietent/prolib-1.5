@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MBMatchAsyncDBJob_GameOnLogin.h"
-#include "MBMatchGameOnAuth.h"
+//#include "MBMatchGameOnAuth.h"
 #include "MMatchObject.h"
 #include "MMatchDBMgr.h"
 

@@ -12,4 +12,6 @@
 
 // ¿©±â´Ù include
 
+#define _WINSOCKAPI_
+
 #endif

@@ -20,6 +20,7 @@
 #ifndef _PUBLISH
 	#include "MProcessController.h"
 #endif
+#include "../../../../../../source/repos/prolib-1.5/Stable/CSCommon/Include/MCommandCommunicator.h"
 
 
 
@@ -442,6 +443,7 @@ bool MRealCPNet::Connect(SOCKET* pSocket, char* pszAddress, int nPort)
 	SOCKET sdConnect = CreateSocket();
 	if (INVALID_SOCKET == sdConnect) {
 		RCPLOG("Can't Create Socket \n");
+		printf("Can't Create Socket \n");
 		*pSocket = INVALID_SOCKET;
 		return false;
 	}
@@ -449,6 +451,7 @@ bool MRealCPNet::Connect(SOCKET* pSocket, char* pszAddress, int nPort)
 	SOCKADDR_IN	ConnectAddr;
 	if (MakeSockAddr(pszAddress, nPort, &ConnectAddr) == false) {
 		RCPLOG("Can't resolve Address %s:%n", pszAddress, nPort);
+		printf("Can't resolve Address %s:%n", pszAddress, nPort);
 		closesocket(sdConnect);
 		*pSocket = INVALID_SOCKET;
 		return false;
@@ -457,6 +460,7 @@ bool MRealCPNet::Connect(SOCKET* pSocket, char* pszAddress, int nPort)
 	MRealSession* pContextConnect = UpdateCompletionPort(sdConnect, RCP_IO_CONNECT, TRUE);
 	if (pContextConnect == NULL) {
 		RCPLOG("failed to update listen socket to IOCP\n");
+		printf("failed to update listen socket to IOCP\n");
 		closesocket(sdConnect);
 		*pSocket = INVALID_SOCKET;
 		return false;
@@ -481,6 +485,7 @@ bool MRealCPNet::Connect(SOCKET* pSocket, char* pszAddress, int nPort)
 	nRet = connect(sdConnect, (LPSOCKADDR)&ConnectAddr, sizeof(ConnectAddr));
 	if (SOCKET_ERROR == nRet) {
 		RCPLOG("RCPLOG> Failed to Connect (%s:%d)\n", pszAddress, nPort);
+		printf("RCPLOG> Failed to Connect (%s:%d)\n", pszAddress, nPort);
 		CloseSession(pContextConnect, TRUE);
 		*pSocket = INVALID_SOCKET;
 		return false;

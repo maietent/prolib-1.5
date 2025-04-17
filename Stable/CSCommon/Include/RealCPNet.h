@@ -15,7 +15,7 @@
 #include <algorithm>
 using namespace std;
 
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <mswsock.h>
 
 #include "MPacket.h"

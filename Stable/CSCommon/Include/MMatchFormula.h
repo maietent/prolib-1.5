@@ -1,7 +1,7 @@
 #ifndef _MMATCHFORMULA_H
 #define _MMATCHFORMULA_H
 
-#include "winsock2.h"
+//#include "winsock2.h"
 #include <vector>
 using namespace std;
 

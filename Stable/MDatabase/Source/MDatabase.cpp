@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include ".\mdatabase.h"
 
-MDatabase::MDatabase(void) : m_fnLogCallback( 0 )
+MDatabase::MDatabase(void) : m_fnLogCallback(0)
 {
 	m_strDSNConnect = "";
 
@@ -21,7 +21,7 @@ bool MDatabase::CheckOpen()
 	if (!m_DB.IsOpen())
 	{
 		ret = Connect(m_strDSNConnect);
-		WriteLog( "MDatabase::CheckOpen - Reconnect database\n" );
+		WriteLog("MDatabase::CheckOpen - Reconnect database\n");
 	}
 
 	return ret;
@@ -29,9 +29,9 @@ bool MDatabase::CheckOpen()
 
 CString MDatabase::BuildDSNString(const CString strDSN, const CString strUserName, const CString strPassword)
 {
-	CString strDSNConnect =  _T("DSN=") + strDSN
-					+ _T(";UID=") + strUserName
-					+ _T(";PWD=") + strPassword;
+	CString strDSNConnect = _T("DSN=") + strDSN
+		+ _T(";UID=") + strUserName
+		+ _T(";PWD=") + strPassword;
 	return strDSNConnect;
 }
 
@@ -45,24 +45,28 @@ bool MDatabase::Connect(CString strDSNConnect)
 	if (strDSNConnect.IsEmpty()) {
 		try {
 			bRet = m_DB.Open(NULL);
-		} catch(CDBException* e) {
-			char szLog[ 256 ] = {0,};
-			_snprintf( szLog, 255, "MDatabase::Connect - %s\n", e->m_strError );
-			WriteLog( szLog );
 		}
-	} else {
+		catch (CDBException* e) {
+			char szLog[256] = { 0, };
+			_snprintf(szLog, 255, "MDatabase::Connect - %s\n", e->m_strError);
+			WriteLog(szLog);
+		}
+	}
+	else {
 		try {
-			bRet = m_DB.OpenEx( strDSNConnect, m_dwOptions );
-		} catch(CDBException* e) {
-			char szLog[ 256 ] = {0,};
-			_snprintf( szLog, 255, "MDatabase::Connect - %s\n", e->m_strError );
-			WriteLog( szLog );
+			bRet = m_DB.OpenEx(strDSNConnect, m_dwOptions);
+		}
+		catch (CDBException* e) {
+			char szLog[256] = { 0, };
+			_snprintf(szLog, 255, "MDatabase::Connect - %s\n", e->m_strError);
+			WriteLog(szLog);
 		}
 	}
 	if (bRet == TRUE) {
 		m_DB.SetQueryTimeout(60);
 		return true;
-	} else {
+	}
+	else {
 		return false;
 	}
 }
@@ -80,23 +84,23 @@ BOOL MDatabase::IsOpen() const
 }
 
 
-void MDatabase::ExecuteSQL( LPCTSTR lpszSQL )
+void MDatabase::ExecuteSQL(LPCTSTR lpszSQL)
 {
 	try
 	{
-		m_DB.ExecuteSQL( lpszSQL );
+		m_DB.ExecuteSQL(lpszSQL);
 	}
-	catch( ... )
+	catch (...)
 	{
 		throw;
 	}
 }
 
 
-void MDatabase::WriteLog( const string& strLog )
+void MDatabase::WriteLog(const string& strLog)
 {
-	if( 0 != m_fnLogCallback  )
+	if (0 != m_fnLogCallback)
 	{
-		m_fnLogCallback( strLog );
+		m_fnLogCallback(strLog);
 	}
 }

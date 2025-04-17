@@ -43,7 +43,7 @@ struct MUID{
 	/// MUID를 nSize만큼 증가
 	MUID Increase(unsigned long int nSize=1){
 		if(Low+nSize>UINT_MAX){
-			_ASSERT(High<UINT_MAX);
+			//ASSERT(High<UINT_MAX);
 			Low = nSize-(UINT_MAX-Low);
 			High++;
 		}

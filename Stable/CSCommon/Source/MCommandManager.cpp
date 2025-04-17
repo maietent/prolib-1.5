@@ -31,7 +31,7 @@ MCommandManager::~MCommandManager(void)
 
 void MCommandManager::Initialize(void)
 {
-	for(MCommandList::iterator i=m_CommandQueue.begin(); i!=m_CommandQueue.end(); i++){
+	for(auto i=m_CommandQueue.begin(); i!=m_CommandQueue.end(); ++i){
 		delete (*i);
 	}
 	m_CommandQueue.clear();
@@ -98,13 +98,13 @@ bool MCommandManager::Post(MCommand* pCmd)
 
 	m_CommandQueue.push_back(pCmd);
 
-
 	return true;
 }
 
 MCommand* MCommandManager::GetCommand(void)
 {
-	if(m_CommandQueue.size()==0) return NULL;
+	if(m_CommandQueue.size()==0)
+		return nullptr;
 
 	MCommand* pCmd = *m_CommandQueue.begin();
 	

@@ -20,5 +20,7 @@
 #include "rapidxml.hpp"
 #include "rapidxml_utils.hpp"
 
+#define _WINSOCKAPI_
+
 
 #endif
