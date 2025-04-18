@@ -62,6 +62,10 @@
 #include "CheckReturnCallStack.h"
 #include "ZGameInput.h"
 
+#include "../sdk/md5/md5.h"
+
+//#include "ACMain.h"
+
 RMODEPARAMS	g_ModeParams={800,600,true,D3DFMT_X8R8G8B8};
 
 #define SUPPORT_EXCEPTIONHANDLING
@@ -197,7 +201,7 @@ RRESULT OnCreate(void *pParam)
 	if( !g_pDefFont->Create("Default", Z_LOCALE_DEFAULT_FONT, DEFAULT_FONT_HEIGHT, 1.0f) )
 
 	{
-		mlog("Fail to Create defualt font : MFontR2 / main.cpp.. onCreate\n" );
+		mlog("Failed to create the default font\n");
 		g_pDefFont->Destroy();
 		SAFE_DELETE( g_pDefFont );
 		g_pDefFont	= NULL;
@@ -211,7 +215,6 @@ RRESULT OnCreate(void *pParam)
 	{
 		ZGetInitialLoading()->AddBitmap(0, "Interface/default/loading/loading_adult.jpg");
 		ZGetInitialLoading()->AddBitmapBar( "Interface/default/loading/loading.bmp" );
-		//ZGetInitialLoading()->SetText( g_pDefFont, 10, 30, cstrReleaseDate );
 
 		ZGetInitialLoading()->SetPercentage( 0.0f );
 		ZGetInitialLoading()->Draw( MODE_FADEIN, 0 , true );
@@ -220,7 +223,7 @@ RRESULT OnCreate(void *pParam)
 	g_Mint.Initialize(800, 600, g_pDC, g_pDefFont);
 	Mint::GetInstance()->SetHWND(RealSpace2::g_hWnd);
 
-	mlog("interface Initialize success\n");
+	mlog("Interface initialized\n");
 
 	ZLoadingProgress appLoading("application");
 	if(!g_App.OnCreate(&appLoading))
@@ -301,7 +304,7 @@ bool CheckDll(char* fileName, BYTE* SHA1_Value)
 
 RRESULT OnDestroy(void *pParam)
 {
-	mlog("Destroy gunz\n");
+	mlog("Clean-up triggered.\n");
 
 	g_App.OnDestroy();
 
@@ -309,22 +312,17 @@ RRESULT OnDestroy(void *pParam)
 
 	g_Mint.Finalize();
 
-	mlog("interface finalize.\n");
+	mlog("Interface finalized\n");
 
 	SAFE_DELETE(g_pInput);
 	g_DInput.Destroy();
 
-	mlog("game input destroy.\n");
+	mlog("Game input destroyed\n");
 
 	RGetShaderMgr()->Release();
-
-//	g_App.OnDestroy();
-
-	// mlog("main : g_App.OnDestroy()\n");
-
 	ZGetConfiguration()->Destroy();
 
-	mlog("game gonfiguration destroy.\n");
+	mlog("Game configuration destroyed\n");
 
 	delete g_pDC;
 
@@ -343,36 +341,35 @@ RRESULT OnDestroy(void *pParam)
 	}
 
 	MFontManager::Destroy();
+	mlog("MFontManager destroyed\n");
 	MBitmapManager::Destroy();
+	mlog("Bitmap manager destroyed\n");
 	MBitmapManager::DestroyAniBitmap();
+	mlog("Animation bitmap destroyed\n");
 
-	mlog("Bitmap manager destroy Animation bitmap.\n");
-
-
-	// 메모리풀 헤제
-	ZBasicInfoItem::Release(); // 할당되어 있는 메모리 해제
-//	ZHPInfoItem::Release();
+	ZBasicInfoItem::Release();
 
 	ZGetStencilLight()->Destroy();
+	mlog("Stencil light destroyed\n");
 	LightSource::Release();
-
-//	ZStencilLight::GetInstance()->Destroy();
+	mlog("Light source released\n");
 
 	RBspObject::DestroyShadeMap();
 	RDestroyLenzFlare();
+	mlog("LenzFlare destroyed\n");
 	RAnimationFileMgr::GetInstance()->Destroy();
+	mlog("Animation file manager destroyed\n");
 	
 	ZStringResManager::ResetInstance();
+	mlog("String resource manager reset\n");
 
-	mlog("destroy gunz finish.\n");
+	mlog("Clean-up finished\n");
 
 	return R_OK;
 }
 
 RRESULT OnUpdate(void* pParam)
 {
-	//_ASSERTE( _CrtCheckMemory( ) );
-
 	__BP(100, "main::OnUpdate");
 	g_pInput->Update();
 
@@ -415,27 +412,7 @@ RRESULT OnRender(void* pParam)
 	if (ZGetGameInterface()->GetBandiCapturer() != NULL)
 		ZGetGameInterface()->GetBandiCapturer()->DrawCapture(g_pDC);
 
-
-#ifdef _SMOOTHLOOP
-	Sleep(10);
-#endif
-
-#ifndef _PUBLISH
-
-	if(g_pDefFont) {
-		static char __buffer[256];
-
-		int fMs = static_cast<int>(std::round(1000.f/g_fFPS));
-		float fScore = 100-(fMs-(1000.f/60.f))*2;
-
-		sprintf(__buffer, "FPS : %d",fMs);
-		g_pDefFont->m_Font.DrawText( MGetWorkspaceWidth()-200,0,__buffer );
-//		OutputDebugString(__buffer);
-	}
-
-#endif
-
-	// FPS Counter
+	/* CUSTOM FPS Counter */
 
 	char szBuffer[64];
 	sprintf_s(szBuffer, sizeof(szBuffer), "FPS: %i", static_cast<int>(std::round(1000.f / g_fFPS)));
@@ -565,8 +542,6 @@ void ResetAppResource()
 	ZGetGameInterface()->m_sbRemainClientConnectionForResetApp = false;
 }
 
-// 느려도 관계없다~~ -.-
-
 int FindStringPos(char* str,char* word)
 {
 	if(!str || str[0]==0)	return -1;
@@ -601,8 +576,6 @@ int FindStringPos(char* str,char* word)
 
 bool FindCrashFunc(char* pName)
 {
-//	Function Name
-//	File Name 
 	if(!pName) return false;
 
 	FILE *fp;
@@ -620,13 +593,10 @@ bool FindCrashFunc(char* pName)
 
 	fclose(fp);
 
-	// 우리 쏘스에서 찾는다.
 	int posSource = FindStringPos(pBuffer,"ublish");
 	if(posSource==-1) return false;
 
 	int posA = FindStringPos(pBuffer+posSource,"Function Name");
-//	int posB = FindStringPos(pBuffer,"File Name");	
-	// filename 이 없는 경우도 있어서 이렇게 바꿨다
 	int posB = posA + FindStringPos(pBuffer+posSource+posA,"\n");
 
 	if(posA==-1) return false;
@@ -634,7 +604,6 @@ bool FindCrashFunc(char* pName)
 
 	posA += 16;
 
-//	int memsize = posB-posA-6;
 	int memsize = posB-posA;
 	memcpy(pName,&pBuffer[posA+posSource],memsize);
 
@@ -655,9 +624,8 @@ void HandleExceptionLog()
 {
 	#define ERROR_REPORT_FOLDER	"ReportError"
 
-	extern char* logfilename;	// Instance on MDebug.cpp
+	extern char* logfilename;
 
-	// ERROR_REPORT_FOLDER 존재하는지 검사하고, 없으면 생성
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
 
@@ -671,19 +639,9 @@ void HandleExceptionLog()
 		FindClose(hFind);
 	}
 
-
-//2007년 2월 13일 BAReport 더이상 사용 못하게 막음
-
-
-	// mlog.txt 를 ERROR_REPORT_FOLDER 로 복사
-
-	//acesaga_0928_911_moanus_rslog.txt
-	//USAGE_EX) BAReport app=acesaga;addr=moon.maiet.net;port=21;id=ftp;passwd=ftp@;gid=10;user=moanus;localfile=rslog.txt;remotefile=remote_rslog.txt;
-
 	if(ZGetCharacterManager()) {
 		ZGetCharacterManager()->OutputDebugString_CharacterState();
 	}
-
 
 	ZGameClient* pClient = (ZGameClient*)ZGameClient::GetInstance();
 
@@ -704,7 +662,6 @@ void HandleExceptionLog()
 	else { 
 		wsprintf(szPlayer, "Unknown(-1.-1)");
 	}
-
 
 	if (pClient) {
 
@@ -783,20 +740,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return TRUE; // prevent Windows from setting cursor to window class cursor
 		}break;
 		case WM_ENTERIDLE:
-			// 모달 대화상자가 코드를 블럭하고 있을 때 부모에게 보내는 idle 통지메시지
-			// (일본 IME에 모달 대화상자가 있어서 넣었음)
-			// 모달 대화상자로 업데이트 루프를 블럭해서 무적 어뷰즈로 악용되기 때문에 여기서 업데이트를 실행한다
 			RFrame_UpdateRender();
 			break;
-
-			/*
-		case  WM_LBUTTONDOWN:
-			SetCapture(hWnd);
-			return TRUE;
-		case WM_LBUTTONUP:
-			ReleaseCapture();
-			return TRUE;
-			*/
 		case WM_KEYDOWN:
 			{
 				bool b = false;
@@ -821,48 +766,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}break;
 		case WM_SYSCOMMAND:
 		{
-			//if (wParam == SC_MAXIMIZE)
-			//{
-			//	const int iDpi = GetDpiForWindow(g_hWnd);
-			//	int dpiScaledWidth = MulDiv(RGetScreenWidth(), iDpi, 96);
-			//	int dpiScaledHeight = MulDiv(RGetScreenHeight(), iDpi, 96);
-
-			//	if (RIsMaximized())
-			//	{
-			//		RSetMaximized(false);
-			//	}
-			//	else
-			//	{
-			//		RSetMaximized(true);
-			//		RECT WorkAreaRect;
-			//		SystemParametersInfo(SPI_GETWORKAREA, NULL, &WorkAreaRect, NULL);
-
-			//		dpiScaledWidth = WorkAreaRect.right - WorkAreaRect.left;
-			//		dpiScaledHeight = WorkAreaRect.bottom - WorkAreaRect.top;
-			//	}
-
-			//	g_ModeParams.nWidth = dpiScaledWidth;
-			//	g_ModeParams.nHeight = dpiScaledHeight;
-
-			//	//RAdjustWindow(&g_ModeParams);
-
-
-			//	RResetDevice(&g_ModeParams);
-
-
-			//	g_pDefFont->Destroy();
-
-			//	if (g_pDefFont->Create("Default", Z_LOCALE_DEFAULT_FONT, DEFAULT_FONT_HEIGHT, 1.0f) == false)
-			//	{
-			//		mlog("Fail to Create defualt font : MFontR2 / main.cpp.. onCreate\n");
-			//		g_pDefFont->Destroy();
-			//		SAFE_DELETE(g_pDefFont);
-			//		g_pDefFont = NULL;
-			//	}
-
-
-
-			//}
 		}
 		break;
 	}
@@ -884,42 +787,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		_ZChangeGameState(wParam);
 	}
 
-
 	return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-/*
-class mtrl {
-public:
-
-};
-
-class node {
-public:
-	int		m_nIndex[5];
-};
-
-
-class _map{
-public:
-	mtrl* GetMtrl(node* node,int index) { return GetMtrl(node->m_nIndex[index]); }
-	mtrl* GetMtrl(int id) { return m_pIndex[id]; }
-
-	mtrl*	m_pIndex[5];
-};
-
-class game {
-public:
-	_map m_map;	
-};
-
-game _game;
-game* g_game;
-*/
-
-
-void ClearTrashFiles()
-{
 }
 
 bool CheckFileList()
@@ -995,7 +863,6 @@ bool _GetFileFontName(char* pUserDefineFont)
 	return false;
 }
 
-
 bool CheckFont()
 {
 	char FontPath[MAX_PATH];
@@ -1015,11 +882,6 @@ bool CheckFont()
 	if (_access(FontNames,0) != -1)	{ g_base_font[RBASE_FONT_BATANG] = 1; }
 	else							{ g_base_font[RBASE_FONT_BATANG] = 0; }
 
-	//	strcpy(FontNames,FontPath);
-	//	strcat(FontNames, "\\Fonts\\System.ttc");
-	//	if (_access(FontNames,0) != -1)	{ g_font[RBASE_FONT_BATANG] = 1; }
-	//	else							{ g_font[RBASE_FONT_BATANG] = 0; }
-
 	if(g_base_font[RBASE_FONT_GULIM]==0 && g_base_font[RBASE_FONT_BATANG]==0) {//둘다없으면..
 
 		if( _access("_Font",0) != -1) { // 이미 기록되어 있다면..
@@ -1029,22 +891,7 @@ bool CheckFont()
 
 			int hr = IDOK;
 
-			//hr = ::MessageBox(NULL,"귀하의 컴퓨터에는 건즈가 사용하는 (굴림,돋움) 폰트가 없는 것 같습니다.\n 다른 폰트를 선택 하시겠습니까?","알림",MB_OKCANCEL);
-			//hr = ::MessageBox(NULL,"귀하의 컴퓨터에는 건즈가 사용하는 (굴림,돋움) 폰트가 없는 것 같습니다.\n 계속 진행 하시겠습니까?","알림",MB_OKCANCEL);
-
 			if(hr==IDOK) {
-				/*			
-				CFontDialog dlg;
-				if(dlg.DoModal()==IDOK) {
-				CString facename = dlg.GetFaceName();
-				lstrcpy((LPSTR)g_UserDefineFont,(LPSTR)facename.operator const char*());
-
-				hr = ::MessageBox(NULL,"선택하신 폰트를 저장 하시겠습니까?","알림",MB_OKCANCEL);
-
-				if(hr==IDOK)
-				_SetFileFontName(g_UserDefineFont);
-				}
-				*/
 				return true;
 			}
 			else {
@@ -1079,17 +926,6 @@ void CheckFileAssociation()
 	}
 }
 
-void UpgradeMrsFile()
-{
-	return;
-	//char temp_path[ 1024];
-	//sprintf( temp_path,"*");
-
-	//FFileList file_list;
-	//GetFindFileListWin(temp_path,".mrs",file_list);
-	//file_list.UpgradeMrs();
-}
-
 HANDLE Mutex = 0;
 
 #ifdef _HSHIELD
@@ -1110,22 +946,7 @@ bool InitPoll()
 	return true;
 }
 
-#include "../sdk/md5/md5.h"
-
-//#include <iostream>
-//#include <fstream>
-//#include <filesystem>
-//#include <cstdlib>
-
-//------------------------------------------- nhn usa end----------------------------------------------------------
-int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int cmdshow)
-{
-	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-
-	CreateConsole();
-
-	InitLog(MLOGSTYLE_DEBUGSTRING|MLOGSTYLE_FILE);
-	mlog("GUNZ " STRFILEVER " launched. build (" __DATE__" " __TIME__") \n");
+void InitTimeFaker() {
 #ifdef _64BIT
 	HMODULE hUptimeFaker = LoadLibrary("Resources/UptimeFaker/UptimeFaker64.dll");
 #else
@@ -1138,87 +959,103 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 	else if (hUptimeFaker) {
 		mlog("Succesfully loaded UpTimeFaker!\n");
 	}
+}
+
+void exitAppStuff() {
+	ACExit();
+	CloseConsole();
+}
+
+//------------------------------------------- nhn usa end----------------------------------------------------------
+int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int cmdshow)
+{
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+	/* CUSTOM Anticheat Init */
+	if(ACMain() != 0)
+		return 112;
+
+	/* CUSTOM Console */
+	CreateConsole();
+
+	/* Init MLog */
+	InitLog(MLOGSTYLE_DEBUGSTRING|MLOGSTYLE_FILE);
+	mlog("GunZ: The Duel launched.\n");
+
+	/* CUSTOM TimeFaker */
+	InitTimeFaker();
 
 	g_fpOnCrcFail = CrcFailExitApp;
+	g_dwMainThreadID = GetCurrentThreadId();	
 
-	g_dwMainThreadID = GetCurrentThreadId();
-	
-#ifdef _MTRACEMEMORY
-	MInitTraceMemory();
-#endif
-
-	//_CrtSetBreakAlloc(994464);
-
-	// Current Directory를 맞춘다.
+	/* Set working directory to game dir */
 	char szModuleFileName[_MAX_DIR] = {0,};
 	GetModuleFileName(NULL, szModuleFileName, _MAX_DIR);
 	PathRemoveFileSpec(szModuleFileName);
 	SetCurrentDirectory(szModuleFileName);
 
-	ClearTrashFiles();
-
+	/* Seed RNG */
 	srand( (unsigned)time( NULL ));
 
-	// 로그 시작
-	//mlog("GUNZ " STRFILEVER " launched. build (" __DATE__" " __TIME__") \n");
+	/* Print date and time */
 	char szDateRun[128]="";
 	char szTimeRun[128]="";
 	_strdate( szDateRun );
 	_strtime( szTimeRun );
 	mlog("Log time (%s %s)\n", szDateRun, szTimeRun);
 
-#ifndef _PUBLISH
-	mlog("cmdline = %s\n",cmdline);
+	/* Print command line arguments, if the game ran with any */
+	if(cmdline != "")
+		mlog("Command Line Arguments = %s\n",cmdline);
 
-#endif
-
-#ifndef _LAUNCHER
-	UpgradeMrsFile();// mrs1 이라면 mrs2로 업그래이드 한다..
-#endif
-
+	/* Print info about the system */
 	MSysInfoLog();
 
+	/* Gets OS Version */
 	OSVERSIONINFOEX os;
 	os.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	GetVersionEx((OSVERSIONINFO*)&os);
 
 	CheckFileAssociation();
 
-	// Initialize MZFileSystem - MUpdate 
+	/* Initialize MZFileSystem - MUpdate */
 	MRegistry::szApplicationName=APPLICATION_NAME;
 	g_App.ShiftBytesOnStart();
 	g_App.InitFileSystem();
 
+	/* Set MRS Read mode */
 #if defined(_PUBLISH) && !defined(DEVELOPER_MODE)
-		MZFile::SetReadMode( MZIPREADFLAG_MRS2 );
+	MZFile::SetReadMode( MZIPREADFLAG_MRS2 );
 #endif
 
-	// config와 string 로딩
+	/* Load the config */
 	ZGetConfiguration()->Load();
-
+	
+	/* Check if DXVK is enabled */
 	if (Z_VIDEO_DXVK) {
 		isDxvk = true;
 	}
 
+	/* Check if D3D9Ex is enabled */
 	if (os.dwMajorVersion >= 6 && Z_VIDEO_D3D9EX) {
 		g_isDirect3D9ExEnabled = true;
 	}
 
+	/* Init ZStringResManager and Locale */
 	ZStringResManager::MakeInstance();
 	if( !ZApplication::GetInstance()->InitLocale() )
 	{
-		MLog("Locale Init error !!!\n");
-		CloseConsole();
+		MLog("Locale initialization failed\n");
+		exitAppStuff();
 		return false;
 	}
-
 	ZGetConfiguration()->Load_StringResDependent();
 
-	// 여기서 메크로 컨버팅... 먼가 구리구리~~ -by SungE.
+	/* I have no clue what this does im gonna be honest */
 	if( !ZGetConfiguration()->LateStringConvert() )
 	{
-		MLog( "main.cpp - Late string convert fale.\n" );
-		CloseConsole();
+		MLog( "main.cpp - Late string convert fail.\n" );
+		exitAppStuff();
 		return false;
 	}
 
@@ -1226,35 +1063,23 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 	DWORD ver_minor = 0;
 	TCHAR ver_letter = ' ';
 
-
 #ifdef SUPPORT_EXCEPTIONHANDLING
 	char szDumpFileName[256];
 	sprintf(szDumpFileName, "Gunz.dmp");
 	try{
 #endif
 
+	/* Parse command line arguments */
 	if (ZApplication::GetInstance()->ParseArguments(cmdline) == false)
 	{
-		CloseConsole();
+		exitAppStuff();
 		return 0;
 	}
 
-#ifndef LOCALE_NHNUSA
-	if (ZCheckHackProcess() == true)
-	{
-//		MessageBox(NULL,
-//			ZMsg(MSG_HACKING_DETECTED), ZMsg( MSG_WARNING), MB_OK);
-		mlog(ZMsg(MSG_HACKING_DETECTED));
-		mlog("\n");
-		mlog("I'm hacker.\n" );
-		CloseConsole();
-		return 0;
-	}
-#endif
-
+	/* Initialize notify.xml whatever that is */
 	if(!InitializeNotify(ZApplication::GetFileSystem())) {
 		MLog("Check notify.xml\n");
-		CloseConsole();
+		exitAppStuff();
 		return 0;
 	}
 	else 
@@ -1262,11 +1087,10 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 		mlog( "InitializeNotify ok.\n" );
 	}
 
-	// font 있는가 검사..
-
+	/* Font stuff, and why is this comment in korean? */
 	if(CheckFont()==false) {
 		MLog("폰트가 없는 유저가 폰트 선택을 취소\n");
-		CloseConsole();
+		exitAppStuff();
 		return 0;
 	}
 
@@ -1282,16 +1106,16 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 	RSetFunction(RF_UPDATEINPUT, OnUpdateInput);
 	SetModeParams();
 
-//	while(ShowCursor(FALSE)>0);
-
+	/* Call RealSpace2 main */
 	int nRMainReturn = RMain(APPLICATION_NAME, this_inst, prev_inst, cmdline, cmdshow, &g_ModeParams, WndProc, IDI_ICON1);
 	if (0 != nRMainReturn)
 	{
 		mlog("error making window");
-		CloseConsole();
+		exitAppStuff();
 		return nRMainReturn;
 	}
 
+	/* Determine antialiasing from config */
 	D3DMULTISAMPLE_TYPE type = D3DMULTISAMPLE_NONE;
 	switch (Z_VIDEO_ANTIALIAS)
 	{
@@ -1305,23 +1129,25 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 		type = D3DMULTISAMPLE_8_SAMPLES; break;
 	}
 
+	/* Set up stencil buffer, multisampling, update limit, and resetDevice */
 	RSetStencilBuffer(Z_VIDEO_STENCILBUFFER);
 	RSetMultiSampling(type);
 	RSetUpdateLimitPerSecond(Z_ETC_UPDATELIMIT_PERSECOND);
 	bool resetDevice = false;
 
+	/* Initialize D3D */
 	if( 0 != RInitD3D(&g_ModeParams) )
 	{
 		MessageBox(g_hWnd, "fail to initialize DirectX", NULL, MB_OK);
 		mlog( "error init RInitD3D\n" );
-		CloseConsole();
+		exitAppStuff();
 		return 0;
 	}
 
+	/* Call RRun() */
 	const int nRRunReturn = RRun();
 
-	//종료시 게임가드가 Xfire의 메모리쓰기 에러를 유발하는데 이때 오류창이 풀스크린 뒤에 뜨는 것 방지하기 위해
-	//종료전에 건즈를 최소화/비활성화 시켜놓는다. xfire의 즉각적인 문제 해결을 기대하기 어려우므로 이렇게 처리
+	/* Show the window i guess */
 	ShowWindow(g_hWnd, SW_MINIMIZE);
 
 #ifdef _MTRACEMEMORY
@@ -1339,9 +1165,11 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 	int nRetPoll = GetNHNUSAPoll().ZHanPollProcess( NULL);
 #endif
 
+	/* CLEANUP FROM HERE */
+
 	ZStringResManager::FreeInstance();
 
-	CloseConsole();
+	exitAppStuff();
 	return nRRunReturn;
 
 //	ShowCursor(TRUE);
@@ -1352,14 +1180,14 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 		// Handle standard exceptions
 		// You can log the exception message or handle it as needed
 		mlog("Standard exception: %s\n", e.what());
-		CloseConsole();
+		exitAppStuff();
 		return -1;
 	}
 	catch (...) {
 		// Handle non-standard exceptions
 		// Optionally, you can use CrashExceptionDump function here if needed
 		CrashExceptionDump(nullptr, szDumpFileName, true);
-		CloseConsole();
+		exitAppStuff();
 		return -1;
 	}
 	//__except(MFilterException(GetExceptionInformation())){
@@ -1376,6 +1204,6 @@ int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int 
 
 //	CoUninitialize();
 
-	CloseConsole();
+	exitAppStuff();
 	return 0;
 }

@@ -38,6 +38,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -189,7 +190,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>../StringLiteral;../sdk/dx9/Include;../CSCommon/Include;../SafeUDP/Include;../CML/Include;../RealSpace2/Include;../MAI/Include;../RealSpace/Include;../Mint2/Include;../RealSound/Include;../MDatabase/Include;../MCountryFilter/Include;../sdk/lua/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../StringLiteral;../sdk/dx9/Include;../CSCommon/Include;../SafeUDP/Include;../CML/Include;../RealSpace2/Include;../MAI/Include;../RealSpace/Include;../Mint2/Include;../RealSound/Include;../MDatabase/Include;../MCountryFilter/Include;../sdk/lua/include;../CSCommon;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_RELEASE;_PUBLISH;_USING_CXR;%(PreprocessorDefinitions);_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;_64BIT</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -213,6 +214,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ACMain.h" />
+    <ClInclude Include="AntiSpeedHack.h" />
+    <ClInclude Include="IfCheatingHandler.h" />
     <ClInclude Include="ZActionDef.h" />
     <ClInclude Include="ZActorAction.h" />
     <ClInclude Include="ZActorActionManager.h" />
@@ -485,6 +489,9 @@
     <ClInclude Include="ZWorldObject_Navigation.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ACMain.cpp" />
+    <ClCompile Include="AntiSpeedHack.cpp" />
+    <ClCompile Include="IfCheatingHandler.cpp" />
     <ClCompile Include="ZActorAction.cpp" />
     <ClCompile Include="ZActorActionManager.cpp" />
     <ClCompile Include="ZActorBase.cpp" />
