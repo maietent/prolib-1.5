@@ -214,9 +214,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ACMain.h" />
-    <ClInclude Include="AntiSpeedHack.h" />
-    <ClInclude Include="IfCheatingHandler.h" />
     <ClInclude Include="ZActionDef.h" />
     <ClInclude Include="ZActorAction.h" />
     <ClInclude Include="ZActorActionManager.h" />
@@ -489,9 +486,6 @@
     <ClInclude Include="ZWorldObject_Navigation.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ACMain.cpp" />
-    <ClCompile Include="AntiSpeedHack.cpp" />
-    <ClCompile Include="IfCheatingHandler.cpp" />
     <ClCompile Include="ZActorAction.cpp" />
     <ClCompile Include="ZActorActionManager.cpp" />
     <ClCompile Include="ZActorBase.cpp" />

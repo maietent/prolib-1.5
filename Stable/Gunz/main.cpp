@@ -962,7 +962,6 @@ void InitTimeFaker() {
 }
 
 void exitAppStuff() {
-	ACExit();
 	CloseConsole();
 }
 
@@ -970,10 +969,6 @@ void exitAppStuff() {
 int PASCAL WinMain(HINSTANCE this_inst, HINSTANCE prev_inst, LPSTR cmdline, int cmdshow)
 {
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-
-	/* CUSTOM Anticheat Init */
-	if(ACMain() != 0)
-		return 112;
 
 	/* CUSTOM Console */
 	CreateConsole();
