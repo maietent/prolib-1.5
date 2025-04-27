@@ -20,7 +20,7 @@
 #ifndef _PUBLISH
 	#include "MProcessController.h"
 #endif
-#include "../../../../../../source/repos/prolib-1.5/Stable/CSCommon/Include/MCommandCommunicator.h"
+//#include "../../../../../../source/repos/prolib-1.5/Stable/CSCommon/Include/MCommandCommunicator.h"
 
 
 
@@ -946,7 +946,7 @@ __try{
 
 				SOCKET sdRecv = INVALID_SOCKET;
 
-				// DEAD?e? IoSize??°??????
+				// DEAD?e? IoSize??Â°??????
 				pRealCPNet->m_SessionMap.Lock();
 					if (pRealCPNet->m_SessionMap.IsExistUnsafe(pSession)) {	// Ensure exist Session 
 						if (pSession->GetSessionState() != MRealSession::SESSIONSTATE_DEAD) {
