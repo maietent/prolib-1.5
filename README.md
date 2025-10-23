@@ -11,7 +11,7 @@ Compile in **Release x64**.
 ---
 
 ## Features
-- Achievement system (commented out — unfinished; causes deathmatch server crash)  
+- Achievement system commented out; unfinished and causes a deathmatch server crash)  
 - Quest fixes from Jetman  
 - 'ZPackedBasicInfo' converted from 'int' to 'float' for character position  
 - Ammo bar works correctly  
